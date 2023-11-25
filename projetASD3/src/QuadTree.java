@@ -5,12 +5,10 @@ public class QuadTree extends QT {
 
     private String fileRoute; // the pgm file's location
 
-    // herits from QT as the og knot
-    //TODO: constructor, getters, setters, toString,
     public QuadTree(String file){
         super();
         setFileRoute(file);
-        //TODO: do the bullshit to retrieve the other data from the file ( might need to call the function pgmToQT)
+        //TODO: implement the bullshit to retrieve the other data from the file ( might need to call the function pgmToQT)
     }
 
     // getters
@@ -49,9 +47,27 @@ public class QuadTree extends QT {
         this.fileRoute = fileRoute;
     }
 
-    //TODO: PgmToQT(read file and store to 2d array, read the array to build a QT), QTToPgm(route returns tab of data,
-    //TODO: read this array of tuples[coords pt, lum, height] and write it into the 2d array, w/ the 2d array and previous
-    //TODO: data write the PGM file)
-    //TODO: compress methods
+    // to_string
+
+    public String toString(){
+        // TODO: implement it as an override of QT's to string do super() and shit
+        return "0";
+    }
+
+    private int pgmToQT(){
+        //TODO: read file and store to temporary 2d array, read the array to build a QT
+        return 0;
+    }
+
     //TODO: check if really a QT (simplify if needed)
+
+    //TODO: compress methods
+
+    private int qtToPgm(){
+        //TODO: go through the QT returns array of tuple[coords pt, lum, height],
+        //TODO: read this array and write it into the 2d array
+        //TODO: w/ the 2d array and previous data write the PGM file
+        return 0;
+    }
+
 }
