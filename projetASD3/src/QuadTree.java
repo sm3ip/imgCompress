@@ -60,9 +60,19 @@ public class QuadTree extends QT {
     }
 
     public int trueQT(){
-        // TODO: if currLum ==-1 goes down a level (on all 4 children) recursively
-        // TODO: if none = -1 and all equal simplify then returns own value
-        // TODO: else returns -1
+        if (this.getCurrLum()==-1){
+            int l1 = this.getV1().trueQT();
+            int l2 = this.getV2().trueQT();
+            int l3 = this.getV3().trueQT();
+            int l4 = this.getV4().trueQT();
+            if(l1!=-1 && l1==l2 && l2==l3 && l3==l4){
+                this.setCurrLum(l1);
+            }
+        }
+        return this.getCurrLum();
+        // DONE: if currLum ==-1 goes down a level (on all 4 children) recursively
+        // DONE: if none = -1 and all equal simplify then returns own value
+        // DONE: else returns -1
         return 0;
     }
 
