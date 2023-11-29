@@ -59,9 +59,37 @@ public class QuadTree extends QT {
         return 0;
     }
 
-    //TODO: check if really a QT (simplify if needed)
+    public int trueQT(){
+        // TODO: if currLum ==-1 goes down a level (on all 4 children) recursively
+        // TODO: if none = -1 and all equal simplify then returns own value
+        // TODO: else returns -1
+        return 0;
+    }
 
-    //TODO: compress methods
+    public void lambdaCompr(){
+        //TODO: super the one from QT (its implementation here is maybe useless)
+        //TODO: See method from page 4 of the project specifications
+        //TODO: check if all 4 children don't have children
+        //TODO: if verified do the compression
+        //TODO: else recursive through the children with child(ren)
+    }
+
+    // Rho compression methods
+    //TODO: evaluate epsilon gotta add the var in QT and the method in there aswell
+    //TODO: find the smallest espilon
+    public int getKnot(){
+        // might have to be solely implemented in QT
+        //TODO: if currLum = -1 returns 1 + getKnot of each child else returns 1
+        return 0;
+    }
+    public void rhoCompr(int p){
+        //TODO: get amount of knot
+        //TODO: while p> currAmountKnot/prevAmountKnot*100
+        //TODO: find the smallest epsilon and do the basic compression implemented through QT
+        //TODO: update all epsilon or only the parent's one
+        //TODO: update currAmountKnot
+    }
+
 
     private int qtToPgm(){
         //TODO: go through the QT returns array of tuple[coords pt, lum, height],
