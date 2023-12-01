@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class QuadTree extends QT {
     private int maxLum;
     private int size;
@@ -8,6 +12,7 @@ public class QuadTree extends QT {
     public QuadTree(String file){
         super();
         setFileRoute(file);
+        pgmToQT();
         //TODO: implement the bullshit to retrieve the other data from the file ( might need to call the function pgmToQT)
     }
 
@@ -56,6 +61,30 @@ public class QuadTree extends QT {
 
     private int pgmToQT(){
         //TODO: read file and store to temporary 2d array, read the array to build a QT
+        try{
+            int count =0;
+            File thePgm = new File(this.getFileRoute());
+            Scanner theReader = new Scanner(thePgm);
+            while (theReader.hasNextLine()){
+                String currLine = theReader.nextLine();
+                if (count<2){
+                    count+=1;
+                } else {
+                    String[] tokens = currLine.split(" ");
+                    switch (count) {
+                        case 2 -> this.setSize(Integer.parseInt(tokens[0]));
+
+                        //TODO: create 2D array
+                        case 3 -> this.setMaxLum(Integer.parseInt(tokens[0]));
+                        default -> {
+                        }
+                        //TODO: use indexes i and j to put data in the 2D array
+                    }
+                }
+            }
+        } catch (FileNotFoundException e){
+
+        }
         return 0;
     }
 
