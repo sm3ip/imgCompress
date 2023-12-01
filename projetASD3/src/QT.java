@@ -37,16 +37,66 @@ public class QT {
         return "0";
     }
 
-    public void tree_simplification(){
-        //TODO: parcours de l'arbre et si tous ses fils ont la même luminosité alors remplacer le père par la luminosité
+    public void abandonChildren(int lum){
+        //TODO: drop the child
     }
+
+    public void tree_simplification() {
+
+        if (this.getCurrLum()==-1){
+            this.getV1().tree_simplification();
+            this.getV1().tree_simplification();
+            this.getV1().tree_simplification();
+            this.getV1().tree_simplification();
+            int l1 = this.getV1().getCurrLum();
+            int l2 = this.getV2().getCurrLum();
+            int l3 = this.getV3().getCurrLum();
+            int l4 = this.getV4().getCurrLum();
+            if (l1 != -1 && l1 == l2 && l2 == l3 && l3 == l4) {
+                        this.setCurrLum(l1);
+
+                    }
+        }
+    }
+
+
 
     public void tree_compression_lambda(){
-        //TODO: parcours arbre et utilise la méthode de compression lambda sur les dernières branches
+        if (this.getCurrLum()==-1){
+            int l1 = this.getV1().getCurrLum();
+            int l2 = this.getV2().getCurrLum();
+            int l3 = this.getV3().getCurrLum();
+            int l4 = this.getV4().getCurrLum();
+            if (l1!=-1 && l2!=-1 && l3!=-1 && l4!=-1){
+                int lambda = (int) Math.round(Math.exp(0.25*((Math.log(0.1+l1))+(Math.log(0.1+l2))+(Math.log(0.1+l3))+(Math.log(0.1+l4)))));
+                //TODO: Il faut faire de l'abandon d'enfant ici
+            }
+
+
+
+        }
+        //TODO: Gérer le remplacement du père par la valeur calculé et abandoner les enfants + enlever les if si néccesaire
     }
 
-    public void tree_compression_rho(){
-        //TODO: parcours arbre et utilise la méthode de compression rho sur les dernières branches
+    public void tree_compression_rho() {
+        if (this.getCurrLum() == -1) {
+            int l1 = this.getV1().getCurrLum();
+            int l2 = this.getV2().getCurrLum();
+            int l3 = this.getV3().getCurrLum();
+            int l4 = this.getV4().getCurrLum();
+            if (l1 != -1 && l2 != -1 && l3 != -1 && l4 != -1) {
+                float lambda = (float) Math.exp(0.25 * ((Math.log(0.1 + l1)) + (Math.log(0.1 + l2)) + (Math.log(0.1 + l3)) + (Math.log(0.1 + l4))));
+                float L1 = Math.abs(l1 - lambda);
+                float L2 = Math.abs(l2 - lambda);
+                float L3 = Math.abs(l3 - lambda);
+                float L4 = Math.abs(l4 - lambda);
+                float rho1 = Math.max(L1, L2);
+                float rho2 = Math.max(L1, L2);
+                int rho = Math.round(Math.max(rho1, rho2));
+                //TODO: Il faut faire de l'abandon d'enfant ici
+            }
+        }
+        //TODO: Gérer le remplacement du père par la valeur calculé et abandoner les enfants + enlever les if si néccesaire
     }
 
     public int tab_data(){
