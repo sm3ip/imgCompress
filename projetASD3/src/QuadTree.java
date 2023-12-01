@@ -51,13 +51,7 @@ public class QuadTree extends QT {
     private void setFileRoute(String fileRoute) {
         this.fileRoute = fileRoute;
     }
-
-    // to_string
-
-    public String toString(){
-        // TODO: implement it as an override of QT's to string do super() and shit
-        return "0";
-    }
+    
 
     private int pgmToQT(){
         //TODO: read file and store to temporary 2d array, read the array to build a QT
