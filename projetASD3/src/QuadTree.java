@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class QuadTree extends QT {
     private int maxLum;
     private int size;
@@ -8,6 +12,7 @@ public class QuadTree extends QT {
     public QuadTree(String file){
         super();
         setFileRoute(file);
+        pgmToQT();
         //TODO: implement the bullshit to retrieve the other data from the file ( might need to call the function pgmToQT)
     }
 
@@ -56,17 +61,43 @@ public class QuadTree extends QT {
 
     private int pgmToQT(){
         //TODO: read file and store to temporary 2d array, read the array to build a QT
+        try{
+            int count =0;
+            File thePgm = new File(this.getFileRoute());
+            Scanner theReader = new Scanner(thePgm);
+            while (theReader.hasNextLine()){
+                String currLine = theReader.nextLine();
+                if (count<2){
+                    count+=1;
+                } else {
+                    String[] tokens = currLine.split(" ");
+                    switch (count) {
+                        case 2 -> this.setSize(Integer.parseInt(tokens[0]));
+
+                        //TODO: create 2D array
+                        case 3 -> this.setMaxLum(Integer.parseInt(tokens[0]));
+                        default -> {
+                        }
+                        //TODO: use indexes i and j to put data in the 2D array
+                    }
+                }
+            }
+        } catch (FileNotFoundException e){
+
+        }
         return 0;
     }
 
     public int trueQT(){
+        //TODO: switch it to QT
         if (this.getCurrLum()==-1){
             int l1 = this.getV1().trueQT();
             int l2 = this.getV2().trueQT();
             int l3 = this.getV3().trueQT();
             int l4 = this.getV4().trueQT();
             if(l1!=-1 && l1==l2 && l2==l3 && l3==l4){
-                this.setCurrLum(l1);
+                // it'll be a method deleting every child and setting curLum as the int given in param
+                this.abandonChildren(l1); // TODO: implement it in QT
             }
         }
         return this.getCurrLum();
@@ -90,7 +121,7 @@ public class QuadTree extends QT {
     public int getKnot(){
         // might have to be solely implemented in QT
         //TODO: if currLum = -1 returns 1 + getKnot of each child else returns 1
-        return 0;
+        return (this.getCurrLum()==-1) ? (1+ this.getV1().getKnot() + this.getV2().getKnot() + this.getV3().getKnot() + this.getV4().getKnot()):(1);
     }
     public void rhoCompr(int p){
         //TODO: get amount of knot
