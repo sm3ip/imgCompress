@@ -60,13 +60,15 @@ public class QuadTree extends QT {
     }
 
     public int trueQT(){
+        //TODO: switch it to QT
         if (this.getCurrLum()==-1){
             int l1 = this.getV1().trueQT();
             int l2 = this.getV2().trueQT();
             int l3 = this.getV3().trueQT();
             int l4 = this.getV4().trueQT();
             if(l1!=-1 && l1==l2 && l2==l3 && l3==l4){
-                this.setCurrLum(l1);
+                // it'll be a method deleting every child and setting curLum as the int given in param
+                this.abandonChildren(l1); // TODO: implement it in QT
             }
         }
         return this.getCurrLum();
@@ -90,7 +92,7 @@ public class QuadTree extends QT {
     public int getKnot(){
         // might have to be solely implemented in QT
         //TODO: if currLum = -1 returns 1 + getKnot of each child else returns 1
-        return 0;
+        return (this.getCurrLum()==-1) ? (1+ this.getV1().getKnot() + this.getV2().getKnot() + this.getV3().getKnot() + this.getV4().getKnot()):(1);
     }
     public void rhoCompr(int p){
         //TODO: get amount of knot
