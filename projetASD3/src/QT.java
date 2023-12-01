@@ -3,6 +3,11 @@ public class QT {
     private QT V1, V2, V3, V4;
     private int selfHeight; // where it is in the depth of the tree
 
+    //constructor
+    public QT(){
+        // gonna build the qt later on
+    }
+
     // getters
 
     public int getCurrLum() { return currLum; }

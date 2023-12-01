@@ -64,33 +64,41 @@ public class QuadTree extends QT {
             while (theReader.hasNextLine()){
                 String currLine = theReader.nextLine();
                 if (count<2){
+                    System.out.println(currLine);
                     count+=1;
                 } else {
-                    String[] tokens = currLine.split(" ");
+                    String[] tokens = currLine.split(" +");
                     switch (count) {
                         case 2 -> {
+                            System.out.println(tokens[0]);
                             this.setSize(Integer.parseInt(tokens[0]));
                             this.setTab(new int[this.getSize()][this.getSize()]);
+                            count+=1;
                         }
 
                         //TODO: create 2D array
-                        case 3 -> this.setMaxLum(Integer.parseInt(tokens[0]));
+                        case 3 -> {
+                            this.setMaxLum(Integer.parseInt(tokens[0]));
+                            count+=1;
+                        }
                         default -> {
                             for (String token: tokens) {
-                                try{
                                     int temp = Integer.parseInt(token);
-                                    //continue here
-                                }catch (){
-
-                                }
+                                    this.tab[i][j] = temp;
+                                    i++;
+                                    if (i>=this.getSize()){
+                                        i=0;
+                                        j++;
+                                    }
                             }
                         }
-                        //TODO: use indexes i and j to put data in the 2D array
                     }
                 }
             }
+            theReader.close();
         } catch (FileNotFoundException e){
 
+            System.out.println(e.toString());
         }
         return 0;
     }
