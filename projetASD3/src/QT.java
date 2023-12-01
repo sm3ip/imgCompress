@@ -38,27 +38,34 @@ public class QT {
     }
 
     public void abandonChildren(int lum){
-        //TODO: drop the child
+        setCurrLum(lum);
+        setV1(null);
+        setV2(null);
+        setV3(null);
+        setV4(null);
     }
 
-    public void tree_simplification() {
-
+    public int trueQT(){
         if (this.getCurrLum()==-1){
-            this.getV1().tree_simplification();
-            this.getV1().tree_simplification();
-            this.getV1().tree_simplification();
-            this.getV1().tree_simplification();
-            int l1 = this.getV1().getCurrLum();
-            int l2 = this.getV2().getCurrLum();
-            int l3 = this.getV3().getCurrLum();
-            int l4 = this.getV4().getCurrLum();
-            if (l1 != -1 && l1 == l2 && l2 == l3 && l3 == l4) {
-                        this.setCurrLum(l1);
-
-                    }
+            int l1 = this.getV1().trueQT();
+            int l2 = this.getV2().trueQT();
+            int l3 = this.getV3().trueQT();
+            int l4 = this.getV4().trueQT();
+            if(l1!=-1 && l1==l2 && l2==l3 && l3==l4){
+                this.abandonChildren(l1);
+            }
         }
+        return this.getCurrLum();
+        // DONE: if currLum ==-1 goes down a level (on all 4 children) recursively
+        // DONE: if none = -1 and all equal simplify then returns own value
+        // DONE: else returns -1
     }
 
+    public int getKnot(){
+        // might have to be solely implemented in QT
+        //TODO: if currLum = -1 returns 1 + getKnot of each child else returns 1
+        return (this.getCurrLum()==-1) ? (1+ this.getV1().getKnot() + this.getV2().getKnot() + this.getV3().getKnot() + this.getV4().getKnot()):(1);
+    }
 
 
     public void tree_compression_lambda(){
