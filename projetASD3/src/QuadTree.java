@@ -51,12 +51,14 @@ public class QuadTree extends QT {
     private void setFileRoute(String fileRoute) {
         this.fileRoute = fileRoute;
     }
-    
+
 
     private int pgmToQT(){
         //TODO: read file and store to temporary 2d array, read the array to build a QT
         try{
             int count =0;
+            int i =0;
+            int j =0;
             File thePgm = new File(this.getFileRoute());
             Scanner theReader = new Scanner(thePgm);
             while (theReader.hasNextLine()){
@@ -66,11 +68,22 @@ public class QuadTree extends QT {
                 } else {
                     String[] tokens = currLine.split(" ");
                     switch (count) {
-                        case 2 -> this.setSize(Integer.parseInt(tokens[0]));
+                        case 2 -> {
+                            this.setSize(Integer.parseInt(tokens[0]));
+                            this.setTab(new int[this.getSize()][this.getSize()]);
+                        }
 
                         //TODO: create 2D array
                         case 3 -> this.setMaxLum(Integer.parseInt(tokens[0]));
                         default -> {
+                            for (String token: tokens) {
+                                try{
+                                    int temp = Integer.parseInt(token);
+                                    //continue here
+                                }catch (){
+
+                                }
+                            }
                         }
                         //TODO: use indexes i and j to put data in the 2D array
                     }
