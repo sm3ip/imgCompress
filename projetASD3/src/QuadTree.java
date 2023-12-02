@@ -306,18 +306,6 @@ public class QuadTree extends QT {
             currAmountKnots = this.getKnot();
             System.out.println("p is" + p + " currKnot is" + currAmountKnots + " startKnot is " + startAmountKnots + " val to comp is "+ ((float)currAmountKnots/(float)startAmountKnots)*100);
         }
-        //TODO: get amount of knot
-        //TODO: while p> currAmountKnot/prevAmountKnot*100
-        //TODO: find the smallest epsilon and do the basic compression implemented through QT
-        //TODO: update all epsilon or only the parent's one
-        //TODO: update currAmountKnot
-    }
-
-    private int qtToPgm(){
-        //TODO: go through the QT returns array of tuple[coords pt, lum, height],
-        //TODO: read this array and write it into the 2d array
-        //TODO: w/ the 2d array and previous data write the PGM file
-        return 0;
     }
 
 }

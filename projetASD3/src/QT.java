@@ -150,46 +150,14 @@ public class QT {
                 // now gotta return the concatenation of those 4 arrays
                 //merging 1 and 2
                 // gotta check null val before
-                StrFloatTuple[] v12Epsis = sFMerge(v1Epsis, v2Epsis);
+                StrFloatTuple[] v12Epsis = StrFloatTuple.sFMerge(v1Epsis, v2Epsis);
                 //merging 3 and 4
-                StrFloatTuple[] v34Epsis = sFMerge(v3Epsis, v4Epsis);
+                StrFloatTuple[] v34Epsis = StrFloatTuple.sFMerge(v3Epsis, v4Epsis);
                 //merging 12 and 34
-                return sFMerge(v12Epsis, v34Epsis);
+                return StrFloatTuple.sFMerge(v12Epsis, v34Epsis);
             }
         }
         return null;
-        //TODO: Gérer le remplacement du père par la valeur calculé et abandoner les enfants + enlever les if si néccesaire
     }
 
-    private StrFloatTuple[] sFMerge(StrFloatTuple[] v1Epsis, StrFloatTuple[] v2Epsis) {
-        // might have to put it in its class
-        int v1Len = (v1Epsis == null)?(0):(v1Epsis.length);
-        int v2Len = (v2Epsis == null)?(0):(v2Epsis.length);
-        StrFloatTuple[] v12Epsis = null;
-        if (v1Len+v2Len==0){
-            //StrFloatTuple[]v12Epsis = null;
-        } else if (v1Len==0) {
-            v12Epsis = v2Epsis;
-        } else if (v2Len==0) {
-            v12Epsis = v1Epsis;
-        }else {
-            v12Epsis = Arrays.copyOf(v1Epsis,v1Epsis.length+v2Epsis.length);
-            System.arraycopy(v2Epsis,0,v12Epsis,v1Epsis.length,v2Epsis.length);
-        }
-        return v12Epsis;
-    }
-
-
-    public int tab_data(){
-        //TODO: retourne une table qui donne les origines qui permettent de remplir le tableau final
-        // renvoi (lum, heigth, origin)
-        return 0;
-    }
-
-    public static int dimension(int height){
-        //TODO: en fonction de la hauteur du quadtree, renvoie les dimmensions du quadtree
-        return 0;
-    }
-
-    //TODO: faire une autre classe qui stocke le tableau (lum, height, origin)
 }
