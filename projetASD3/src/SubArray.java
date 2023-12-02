@@ -12,8 +12,8 @@ public class SubArray {
         }
         int[][] subCopy = new int[size][size];
         for (int i = 0; i< size; i++){
-            int[] oriRow = origin[orY+i];
-            System.arraycopy(oriRow,orX,subCopy[i],0,size);
+            int[] oriRow = origin[orX+i];
+            System.arraycopy(oriRow,orY,subCopy[i],0,size);
         }
         return subCopy;
     }

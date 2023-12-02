@@ -9,6 +9,7 @@ public class QT {
     }
 
     public void arrToQT(int[][] tab, int height){
+        System.out.println(height);
         // gonna build the qt later on
         this.selfHeight = height;
         int tempVal = tab[0][0];
