@@ -67,13 +67,13 @@ public class QuadTree extends QT {
             while (theReader.hasNextLine()){
                 String currLine = theReader.nextLine();
                 if (count<2){
-                    System.out.println(currLine);
+                    //System.out.println(currLine);
                     count+=1;
                 } else {
                     String[] tokens = currLine.split(" +");
                     switch (count) {
                         case 2 -> {
-                            System.out.println(tokens[0]);
+                            //System.out.println(tokens[0]);
                             this.setSize(Integer.parseInt(tokens[0]));
                             this.setTab(new int[this.getSize()][this.getSize()]);
                             count+=1;
@@ -195,7 +195,7 @@ public class QuadTree extends QT {
                         break;
                 }
             }
-            System.out.println("size is "+workingSize+" x is " + orX + " y is " + orY + "buffer is " + buffer + " where value is " + whereWeAt);
+            //System.out.println("size is "+workingSize+" x is " + orX + " y is " + orY + "buffer is " + buffer + " where value is " + whereWeAt);
 
             for (int j = orX; j < orX+workingSize ; j++) {
                 for (int k = orY; k <orY+workingSize ; k++) {
@@ -266,6 +266,46 @@ public class QuadTree extends QT {
     //TODO: find the smallest espilon
 
     public void rhoCompr(int p){
+        int startAmountKnots = this.getKnot();
+        int currAmountKnots = startAmountKnots;
+        System.out.println("p is" + p + " currKnot is" + currAmountKnots + " startKnot is " + startAmountKnots + " val to comp is "+ (currAmountKnots/startAmountKnots)*100);
+        while (p<((float)currAmountKnots/(float)startAmountKnots)*100){
+
+            StrFloatTuple[] smallyEpsi = this.smallestEpsi("");
+            float smollerEpsi = smallyEpsi[0].getEpsilonVal();
+            String smollerPath = smallyEpsi[0].getPathway();
+            // find the smallest epsilon
+            for (int i = 1; i < smallyEpsi.length ; i++) {
+                if (smallyEpsi[i].getEpsilonVal()<smollerEpsi){
+                    smollerEpsi = smallyEpsi[i].getEpsilonVal();
+                    smollerPath = smallyEpsi[i].getPathway();
+                }
+            }
+            // get to that peculiar knot
+            // and do the abandonchildren with the epsi val
+            QT tempCute = this;
+            while (smollerPath.length()>0){
+                switch (smollerPath.charAt(0)){
+                    case '1':
+                        tempCute = tempCute.getV1();
+                        break;
+                    case '2':
+                        tempCute = tempCute.getV2();
+                        break;
+                    case '3':
+                        tempCute = tempCute.getV3();
+                        break;
+                    case '4':
+                        tempCute = tempCute.getV4();
+                        break;
+                }
+                smollerPath = smollerPath.substring(1);
+            }
+            tempCute.tree_compression_lambda();
+            this.trueQT();
+            currAmountKnots = this.getKnot();
+            System.out.println("p is" + p + " currKnot is" + currAmountKnots + " startKnot is " + startAmountKnots + " val to comp is "+ ((float)currAmountKnots/(float)startAmountKnots)*100);
+        }
         //TODO: get amount of knot
         //TODO: while p> currAmountKnot/prevAmountKnot*100
         //TODO: find the smallest epsilon and do the basic compression implemented through QT
