@@ -70,7 +70,7 @@ public class QT {
     @Override
     public String toString() {
         //TODO: some bullshit with tostring from QuadTree;
-        return (this.getCurrLum()==-1) ? ("("+this.getV1().toString()+";"+this.getV2().toString()+";"+this.getV3().toString()+";"+this.getV4().toString()+")"):(" lum = " + this.getCurrLum());
+        return (this.getCurrLum()==-1) ? ("("+this.getV1().toString()+";"+this.getV2().toString()+";"+this.getV3().toString()+";"+this.getV4().toString()+")"):(Integer.toString(this.getCurrLum()));
     }
 
     public void abandonChildren(int lum){
