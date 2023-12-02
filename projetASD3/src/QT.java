@@ -22,7 +22,7 @@ public class QT {
             this.V4 = null;
         }else {
             this.currLum = -1;
-            
+
         }
     }
 
