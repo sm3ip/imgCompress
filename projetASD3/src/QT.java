@@ -4,8 +4,26 @@ public class QT {
     private int selfHeight; // where it is in the depth of the tree
 
     //constructor
-    public QT(){
+    public QT(int[][] tab, int height){
         // gonna build the qt later on
+        this.selfHeight = height;
+        int tempVal = tab[0][0];
+        boolean isEqual = true;
+        for (int[] ints : tab) {
+            for (int j = 0; j < tab.length; j++) {
+                isEqual = isEqual && tempVal == ints[j];
+            }
+        }
+        if (isEqual){
+            this.currLum = tempVal;
+            this.V1 = null;
+            this.V2 = null;
+            this.V3 = null;
+            this.V4 = null;
+        }else {
+            this.currLum = -1;
+            
+        }
     }
 
     // getters
