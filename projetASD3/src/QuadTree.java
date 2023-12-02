@@ -1,6 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
+import java.io.FileWriter;
 
 public class QuadTree extends QT {
     private int maxLum;
@@ -12,8 +14,9 @@ public class QuadTree extends QT {
     public QuadTree(String file){
         super();
         setFileRoute(file);
-        pgmToQT();
-        //TODO: implement the bullshit to retrieve the other data from the file ( might need to call the function pgmToQT)
+        pgmToArr();
+        arrToQT(this.tab,0);
+        this.trueQT();
     }
 
     // getters
@@ -53,7 +56,7 @@ public class QuadTree extends QT {
     }
 
 
-    private int pgmToQT(){
+    private void pgmToArr(){
         //TODO: read file and store to temporary 2d array, read the array to build a QT
         try{
             int count =0;
@@ -97,12 +100,57 @@ public class QuadTree extends QT {
             }
             theReader.close();
         } catch (FileNotFoundException e){
-
-            System.out.println(e.toString());
+            System.out.println(e);
         }
-        return 0;
     }
 
+    @Override
+    public String toString(){
+        return this.size+":"+this.maxLum+":"+ super.toString();
+    }
+
+    public boolean saveCurrentQT(String location){
+        try{
+            File daFile = new File(location);
+            if (daFile.createNewFile()){
+                System.out.println("File created");
+            }else {
+                System.out.println("A file with the same name already exists");
+                return false;
+            }
+        } catch (IOException e){
+            return false;
+        }
+        try{
+            FileWriter writy = new FileWriter(location);
+            writy.write(this.toString());
+            writy.close();
+            System.out.println("File successfully written");
+        } catch (IOException e){
+            System.out.println("Couldn't write in the file");
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean qtFileToPgm(String location){
+        String temp = "";
+        try{
+            File qtFile = new File(location);
+            Scanner theReader = new Scanner(qtFile);
+            while (theReader.hasNextLine()){
+                temp = theReader.nextLine();
+            }
+            theReader.close();
+        } catch (FileNotFoundException e){
+            System.out.println(e);
+            return false;
+        }
+        //TODO: process the data
+
+        return true;
+    }
+    //TODO: read it and recreate a pgm
 
 
     public void lambdaCompr(){

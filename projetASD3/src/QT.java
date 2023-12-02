@@ -5,7 +5,38 @@ public class QT {
 
     //constructor
     public QT(){
+        // constructor, basically nothing happens here
+    }
+
+    public void arrToQT(int[][] tab, int height){
+        System.out.println(height);
         // gonna build the qt later on
+        this.selfHeight = height;
+        int tempVal = tab[0][0];
+        boolean isEqual = true;
+        for (int[] ints : tab) {
+            for (int j = 0; j < tab.length; j++) {
+                isEqual = isEqual && tempVal == ints[j];
+            }
+        }
+        if (isEqual){
+            this.currLum = tempVal;
+            this.V1 = null;
+            this.V2 = null;
+            this.V3 = null;
+            this.V4 = null;
+        }else {
+            this.currLum = -1;
+            height++;
+            this.V1 = new QT();
+            this.V1.arrToQT(SubArray.copySubArray(tab,0,0,tab.length/2), height);
+            this.V2 = new QT();
+            this.V2.arrToQT(SubArray.copySubArray(tab,tab.length/2,0,tab.length/2), height);
+            this.V3 = new QT();
+            this.V3.arrToQT(SubArray.copySubArray(tab,tab.length/2,tab.length/2,tab.length/2), height);
+            this.V4 = new QT();
+            this.V4.arrToQT(SubArray.copySubArray(tab,0,tab.length/2,tab.length/2), height);
+        }
     }
 
     // getters
@@ -39,7 +70,7 @@ public class QT {
     @Override
     public String toString() {
         //TODO: some bullshit with tostring from QuadTree;
-        return (this.getCurrLum()==-1) ? ("("+this.getV1().toString()+";"+this.getV2().toString()+";"+this.getV3().toString()+";"+this.getV4().toString()+")"):(" lum = " + this.getCurrLum());
+        return (this.getCurrLum()==-1) ? ("("+this.getV1().toString()+";"+this.getV2().toString()+";"+this.getV3().toString()+";"+this.getV4().toString()+")"):(Integer.toString(this.getCurrLum()));
     }
 
     public void abandonChildren(int lum){
