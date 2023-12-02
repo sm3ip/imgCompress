@@ -112,13 +112,15 @@ public class QT {
             int l4 = this.getV4().getCurrLum();
             if (l1!=-1 && l2!=-1 && l3!=-1 && l4!=-1){
                 int lambda = (int) Math.round(Math.exp(0.25*((Math.log(0.1+l1))+(Math.log(0.1+l2))+(Math.log(0.1+l3))+(Math.log(0.1+l4)))));
-                //TODO: Il faut faire de l'abandon d'enfant ici
+                this.abandonChildren(lambda);
+            }else {
+                this.getV1().tree_compression_lambda();
+                this.getV2().tree_compression_lambda();
+                this.getV3().tree_compression_lambda();
+                this.getV4().tree_compression_lambda();
             }
-
-
-
         }
-        //TODO: Gérer le remplacement du père par la valeur calculé et abandoner les enfants + enlever les if si néccesaire
+        //Do nothing
     }
 
     public void tree_compression_rho() {

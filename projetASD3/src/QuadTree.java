@@ -206,9 +206,6 @@ public class QuadTree extends QT {
             for (int j = 0; j < rightPCount; j++) {
                 whereWeAt = whereWeAt.substring(0,whereWeAt.length()-1);
             }
-            //if (whereWeAt.charAt(whereWeAt.length()-1)=='4'){
-            //    whereWeAt = whereWeAt.substring(0,whereWeAt.length()-1);
-            //}
 
             //updates last char when we get to the next token
             if (whereWeAt !=null && whereWeAt.length()>0){
@@ -257,15 +254,11 @@ public class QuadTree extends QT {
 
         return true;
     }
-    //TODO: read it and recreate a pgm
 
 
     public void lambdaCompr(){
-        //TODO: super the one from QT (its implementation here is maybe useless)
-        //TODO: See method from page 4 of the project specifications
-        //TODO: check if all 4 children don't have children
-        //TODO: if verified do the compression
-        //TODO: else recursive through the children with child(ren)
+        this.tree_compression_lambda(); // do the compression
+        this.trueQT(); // gets it back as an actual quadTree
     }
 
     // Rho compression methods
