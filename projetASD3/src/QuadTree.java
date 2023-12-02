@@ -133,7 +133,7 @@ public class QuadTree extends QT {
         return true;
     }
 
-    public static boolean qtFileToPgm(String location){
+    public static boolean qtFileToPgm(String location,String producedLocation){
         String temp = "";
         try{
             File qtFile = new File(location);
@@ -147,6 +147,113 @@ public class QuadTree extends QT {
             return false;
         }
         //TODO: process the data
+        //format is size:max Lum:QT
+        String[] data = temp.split(":");
+        int size = Integer.parseInt(data[0]);
+        int maxLum = Integer.parseInt(data[1]);
+        int[][] tempTab = new int[size][size];
+        String[] tree = data[2].split(";");
+        String whereWeAt= "1"; // keeps track to where we are in the tree
+
+        for (int i = 0; i < tree.length; i++) {
+            String buffer = "";
+            int rightPCount = 0;
+            for (int j = 0; j < tree[i].length(); j++) {
+                if (tree[i].charAt(j)=='('){
+                    whereWeAt = whereWeAt + "1";
+                }else if (tree[i].charAt(j)==')'){
+                    //do nothing maybe count them
+                    rightPCount++;
+                    //whereWeAt = whereWeAt.substring(0,whereWeAt.length()-1);
+                }else {
+                    buffer = buffer + tree[i].charAt(j);
+                }
+            }
+            //System.out.println("buffer is "+ buffer); BUFFER HERE HAS GOOD VALUE
+            // do shit with that one number
+            int workingSize = size; // the size in which we can fill the 2d array
+            int orX = 0; // the x value of the area origin point
+            int orY = 0; // the y value of the area origin
+            // updates the area that's gonna be filled
+            for (int j = 1; j < whereWeAt.length(); j++) {
+                switch (whereWeAt.charAt(j)){
+                    case '1':
+                        workingSize = workingSize/2;
+                        break;
+                    case '2':
+                        orY+= workingSize/2;
+                        workingSize = workingSize/2;
+                        break;
+                    case '3':
+                        orY+= workingSize/2;
+                        orX+= workingSize/2;
+                        workingSize = workingSize/2;
+                        break;
+                    case '4':
+                        orX+= workingSize/2;
+                        workingSize = workingSize/2;
+                        break;
+                }
+            }
+            System.out.println("size is "+workingSize+" x is " + orX + " y is " + orY + "buffer is " + buffer + " where value is " + whereWeAt);
+
+            for (int j = orX; j < orX+workingSize ; j++) {
+                for (int k = orY; k <orY+workingSize ; k++) {
+                    tempTab[j][k] = Integer.parseInt(buffer);
+                }
+            }
+            // take out if its a 4
+            for (int j = 0; j < rightPCount; j++) {
+                whereWeAt = whereWeAt.substring(0,whereWeAt.length()-1);
+            }
+            //if (whereWeAt.charAt(whereWeAt.length()-1)=='4'){
+            //    whereWeAt = whereWeAt.substring(0,whereWeAt.length()-1);
+            //}
+
+            //updates last char when we get to the next token
+            if (whereWeAt !=null && whereWeAt.length()>0){
+                char lastChar =whereWeAt.charAt(whereWeAt.length()-1);//= (char) (Character.getNumericValue(whereWeAt.charAt(whereWeAt.length()-1))+1);
+                whereWeAt = whereWeAt.substring(0,whereWeAt.length()-1) + (Character.getNumericValue(lastChar)+1);
+            }
+
+        }
+        // the data struct is saved in this function, now is the time to write it into a file
+        try{ // creates the file
+            File newPgmFile = new File(producedLocation);
+            if (newPgmFile.createNewFile()){
+                System.out.println("Pgm File has been created");
+            }else {
+                System.out.println("couldnt create the file cuz another one already exists with the same name");
+                return false;
+            }
+        } catch (IOException e){
+            System.out.println("Couldnt create the file for unknown reasons");
+            return false;
+        }
+
+        // writes in the file
+        try{
+            FileWriter writy = new FileWriter(producedLocation);
+            // writing header's data
+            writy.write("P2" + System.getProperty("line.separator"));
+            writy.write("# This generated pgm has been brought to you through Emile Bonmarriage and Lucas Pereira's hardwork" + System.getProperty("line.separator"));
+            writy.write(size +" "+ size + System.getProperty("line.separator"));
+            writy.write(maxLum + System.getProperty("line.separator"));
+            // writing the picture's main data
+            for (int i = 0; i < tempTab.length; i++) {
+                String currLine = "";
+                for (int j = 0; j < tempTab.length; j++) {
+                    currLine += tempTab[i][j] + " ";
+                }
+                writy.write(currLine + System.getProperty("line.separator"));
+            }
+            writy.close();
+            System.out.println("File successfully written");
+
+        } catch (IOException e){
+            System.out.println(" Couldnt write in the file for some reasons");
+            return false;
+        }
 
         return true;
     }
