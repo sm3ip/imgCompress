@@ -133,7 +133,23 @@ public class QuadTree extends QT {
         return true;
     }
 
-    //TODO: store the to string in a file (w/ custom extension)
+    public static boolean qtFileToPgm(String location){
+        String temp = "";
+        try{
+            File qtFile = new File(location);
+            Scanner theReader = new Scanner(qtFile);
+            while (theReader.hasNextLine()){
+                temp = theReader.nextLine();
+            }
+            theReader.close();
+        } catch (FileNotFoundException e){
+            System.out.println(e);
+            return false;
+        }
+        //TODO: process the data
+
+        return true;
+    }
     //TODO: read it and recreate a pgm
 
 
