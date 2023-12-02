@@ -12,7 +12,8 @@ public class QuadTree extends QT {
     public QuadTree(String file){
         super();
         setFileRoute(file);
-        pgmToQT();
+        pgmToArr();
+        arrToQT(this.tab,0);
         //TODO: implement the bullshit to retrieve the other data from the file ( might need to call the function pgmToQT)
     }
 
@@ -53,7 +54,7 @@ public class QuadTree extends QT {
     }
 
 
-    private int pgmToQT(){
+    private void pgmToArr(){
         //TODO: read file and store to temporary 2d array, read the array to build a QT
         try{
             int count =0;
@@ -97,10 +98,8 @@ public class QuadTree extends QT {
             }
             theReader.close();
         } catch (FileNotFoundException e){
-
-            System.out.println(e.toString());
+            System.out.println(e);
         }
-        return 0;
     }
 
 

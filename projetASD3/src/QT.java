@@ -4,7 +4,11 @@ public class QT {
     private int selfHeight; // where it is in the depth of the tree
 
     //constructor
-    public QT(int[][] tab, int height){
+    public QT(){
+        // constructor, basically nothing happens here
+    }
+
+    public void arrToQT(int[][] tab, int height){
         // gonna build the qt later on
         this.selfHeight = height;
         int tempVal = tab[0][0];
@@ -22,7 +26,15 @@ public class QT {
             this.V4 = null;
         }else {
             this.currLum = -1;
-
+            height++;
+            this.V1 = new QT();
+            this.V1.arrToQT(SubArray.copySubArray(tab,0,0,tab.length/2), height);
+            this.V2 = new QT();
+            this.V2.arrToQT(SubArray.copySubArray(tab,tab.length/2,0,tab.length/2), height);
+            this.V3 = new QT();
+            this.V3.arrToQT(SubArray.copySubArray(tab,tab.length/2,tab.length/2,tab.length/2), height);
+            this.V4 = new QT();
+            this.V4.arrToQT(SubArray.copySubArray(tab,0,tab.length/2,tab.length/2), height);
         }
     }
 
