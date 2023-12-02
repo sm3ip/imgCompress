@@ -67,13 +67,13 @@ public class QuadTree extends QT {
             while (theReader.hasNextLine()){
                 String currLine = theReader.nextLine();
                 if (count<2){
-                    System.out.println(currLine);
+                    //System.out.println(currLine);
                     count+=1;
                 } else {
                     String[] tokens = currLine.split(" +");
                     switch (count) {
                         case 2 -> {
-                            System.out.println(tokens[0]);
+                            //System.out.println(tokens[0]);
                             this.setSize(Integer.parseInt(tokens[0]));
                             this.setTab(new int[this.getSize()][this.getSize()]);
                             count+=1;
@@ -195,7 +195,7 @@ public class QuadTree extends QT {
                         break;
                 }
             }
-            System.out.println("size is "+workingSize+" x is " + orX + " y is " + orY + "buffer is " + buffer + " where value is " + whereWeAt);
+            //System.out.println("size is "+workingSize+" x is " + orX + " y is " + orY + "buffer is " + buffer + " where value is " + whereWeAt);
 
             for (int j = orX; j < orX+workingSize ; j++) {
                 for (int k = orY; k <orY+workingSize ; k++) {
@@ -206,9 +206,6 @@ public class QuadTree extends QT {
             for (int j = 0; j < rightPCount; j++) {
                 whereWeAt = whereWeAt.substring(0,whereWeAt.length()-1);
             }
-            //if (whereWeAt.charAt(whereWeAt.length()-1)=='4'){
-            //    whereWeAt = whereWeAt.substring(0,whereWeAt.length()-1);
-            //}
 
             //updates last char when we get to the next token
             if (whereWeAt !=null && whereWeAt.length()>0){
@@ -257,15 +254,11 @@ public class QuadTree extends QT {
 
         return true;
     }
-    //TODO: read it and recreate a pgm
 
 
     public void lambdaCompr(){
-        //TODO: super the one from QT (its implementation here is maybe useless)
-        //TODO: See method from page 4 of the project specifications
-        //TODO: check if all 4 children don't have children
-        //TODO: if verified do the compression
-        //TODO: else recursive through the children with child(ren)
+        this.tree_compression_lambda(); // do the compression
+        this.trueQT(); // gets it back as an actual quadTree
     }
 
     // Rho compression methods
@@ -273,18 +266,46 @@ public class QuadTree extends QT {
     //TODO: find the smallest espilon
 
     public void rhoCompr(int p){
-        //TODO: get amount of knot
-        //TODO: while p> currAmountKnot/prevAmountKnot*100
-        //TODO: find the smallest epsilon and do the basic compression implemented through QT
-        //TODO: update all epsilon or only the parent's one
-        //TODO: update currAmountKnot
-    }
+        int startAmountKnots = this.getKnot();
+        int currAmountKnots = startAmountKnots;
+        System.out.println("p is" + p + " currKnot is" + currAmountKnots + " startKnot is " + startAmountKnots + " val to comp is "+ (currAmountKnots/startAmountKnots)*100);
+        while (p<((float)currAmountKnots/(float)startAmountKnots)*100){
 
-    private int qtToPgm(){
-        //TODO: go through the QT returns array of tuple[coords pt, lum, height],
-        //TODO: read this array and write it into the 2d array
-        //TODO: w/ the 2d array and previous data write the PGM file
-        return 0;
+            StrFloatTuple[] smallyEpsi = this.smallestEpsi("");
+            float smollerEpsi = smallyEpsi[0].getEpsilonVal();
+            String smollerPath = smallyEpsi[0].getPathway();
+            // find the smallest epsilon
+            for (int i = 1; i < smallyEpsi.length ; i++) {
+                if (smallyEpsi[i].getEpsilonVal()<smollerEpsi){
+                    smollerEpsi = smallyEpsi[i].getEpsilonVal();
+                    smollerPath = smallyEpsi[i].getPathway();
+                }
+            }
+            // get to that peculiar knot
+            // and do the abandonchildren with the epsi val
+            QT tempCute = this;
+            while (smollerPath.length()>0){
+                switch (smollerPath.charAt(0)){
+                    case '1':
+                        tempCute = tempCute.getV1();
+                        break;
+                    case '2':
+                        tempCute = tempCute.getV2();
+                        break;
+                    case '3':
+                        tempCute = tempCute.getV3();
+                        break;
+                    case '4':
+                        tempCute = tempCute.getV4();
+                        break;
+                }
+                smollerPath = smollerPath.substring(1);
+            }
+            tempCute.tree_compression_lambda();
+            this.trueQT();
+            currAmountKnots = this.getKnot();
+            System.out.println("p is" + p + " currKnot is" + currAmountKnots + " startKnot is " + startAmountKnots + " val to comp is "+ ((float)currAmountKnots/(float)startAmountKnots)*100);
+        }
     }
 
 }

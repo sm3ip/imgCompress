@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class QT {
     private int currLum; // if equals to -1 means you need to seek for the 4 children
     private QT V1, V2, V3, V4;
@@ -9,7 +11,7 @@ public class QT {
     }
 
     public void arrToQT(int[][] tab, int height){
-        System.out.println(height);
+        //System.out.println(height);
         // gonna build the qt later on
         this.selfHeight = height;
         int tempVal = tab[0][0];
@@ -112,16 +114,18 @@ public class QT {
             int l4 = this.getV4().getCurrLum();
             if (l1!=-1 && l2!=-1 && l3!=-1 && l4!=-1){
                 int lambda = (int) Math.round(Math.exp(0.25*((Math.log(0.1+l1))+(Math.log(0.1+l2))+(Math.log(0.1+l3))+(Math.log(0.1+l4)))));
-                //TODO: Il faut faire de l'abandon d'enfant ici
+                this.abandonChildren(lambda);
+            }else {
+                this.getV1().tree_compression_lambda();
+                this.getV2().tree_compression_lambda();
+                this.getV3().tree_compression_lambda();
+                this.getV4().tree_compression_lambda();
             }
-
-
-
         }
-        //TODO: Gérer le remplacement du père par la valeur calculé et abandoner les enfants + enlever les if si néccesaire
+        //Do nothing
     }
 
-    public void tree_compression_rho() {
+    public StrFloatTuple[] smallestEpsi(String path) {
         if (this.getCurrLum() == -1) {
             int l1 = this.getV1().getCurrLum();
             int l2 = this.getV2().getCurrLum();
@@ -133,25 +137,27 @@ public class QT {
                 float L2 = Math.abs(l2 - lambda);
                 float L3 = Math.abs(l3 - lambda);
                 float L4 = Math.abs(l4 - lambda);
-                float rho1 = Math.max(L1, L2);
-                float rho2 = Math.max(L1, L2);
-                int rho = Math.round(Math.max(rho1, rho2));
+                float epsi1 = Math.max(L1, L2);
+                float epsi2 = Math.max(L3, L4);
+                float epsi = Math.round(Math.max(epsi1, epsi2));
+                return new StrFloatTuple[]{new StrFloatTuple(path,epsi)};
                 //TODO: Il faut faire de l'abandon d'enfant ici
+            }else {
+                StrFloatTuple[] v1Epsis = this.getV1().smallestEpsi(path+"1");
+                StrFloatTuple[] v2Epsis = this.getV2().smallestEpsi(path+"2");
+                StrFloatTuple[] v3Epsis = this.getV3().smallestEpsi(path+"3");
+                StrFloatTuple[] v4Epsis = this.getV4().smallestEpsi(path+"4");
+                // now gotta return the concatenation of those 4 arrays
+                //merging 1 and 2
+                // gotta check null val before
+                StrFloatTuple[] v12Epsis = StrFloatTuple.sFMerge(v1Epsis, v2Epsis);
+                //merging 3 and 4
+                StrFloatTuple[] v34Epsis = StrFloatTuple.sFMerge(v3Epsis, v4Epsis);
+                //merging 12 and 34
+                return StrFloatTuple.sFMerge(v12Epsis, v34Epsis);
             }
         }
-        //TODO: Gérer le remplacement du père par la valeur calculé et abandoner les enfants + enlever les if si néccesaire
+        return null;
     }
 
-    public int tab_data(){
-        //TODO: retourne une table qui donne les origines qui permettent de remplir le tableau final
-        // renvoi (lum, heigth, origin)
-        return 0;
-    }
-
-    public static int dimension(int height){
-        //TODO: en fonction de la hauteur du quadtree, renvoie les dimmensions du quadtree
-        return 0;
-    }
-
-    //TODO: faire une autre classe qui stocke le tableau (lum, height, origin)
 }
