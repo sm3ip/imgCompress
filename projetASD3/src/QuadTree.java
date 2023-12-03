@@ -17,6 +17,7 @@ public class QuadTree extends QT {
         pgmToArr();
         arrToQT(this.tab,0);
         this.trueQT();
+        this.determineEpsiLamb();
     }
 
     // getters
@@ -251,7 +252,6 @@ public class QuadTree extends QT {
             System.out.println(" Couldnt write in the file for some reasons");
             return false;
         }
-
         return true;
     }
 
@@ -271,41 +271,29 @@ public class QuadTree extends QT {
         System.out.println("p is" + p + " currKnot is" + currAmountKnots + " startKnot is " + startAmountKnots + " val to comp is "+ (currAmountKnots/startAmountKnots)*100);
         while (p<((float)currAmountKnots/(float)startAmountKnots)*100){
 
-            StrFloatTuple[] smallyEpsi = this.smallestEpsi("");
-            float smollerEpsi = smallyEpsi[0].getEpsilonVal();
-            String smollerPath = smallyEpsi[0].getPathway();
-            // find the smallest epsilon
-            for (int i = 1; i < smallyEpsi.length ; i++) {
-                if (smallyEpsi[i].getEpsilonVal()<smollerEpsi){
-                    smollerEpsi = smallyEpsi[i].getEpsilonVal();
-                    smollerPath = smallyEpsi[i].getPathway();
-                }
-            }
-            // get to that peculiar knot
-            // and do the abandonchildren with the epsi val
-            QT tempCute = this;
-            while (smollerPath.length()>0){
-                switch (smollerPath.charAt(0)){
-                    case '1':
-                        tempCute = tempCute.getV1();
-                        break;
-                    case '2':
-                        tempCute = tempCute.getV2();
-                        break;
-                    case '3':
-                        tempCute = tempCute.getV3();
-                        break;
-                    case '4':
-                        tempCute = tempCute.getV4();
-                        break;
-                }
-                smollerPath = smollerPath.substring(1);
-            }
+            StrFloatTuple smallyEpsi = this.smallestEpsi("");
+            QT tempCute = findRhoQT(smallyEpsi);
             tempCute.tree_compression_lambda();
             this.trueQT();
             currAmountKnots = this.getKnot();
             System.out.println("p is" + p + " currKnot is" + currAmountKnots + " startKnot is " + startAmountKnots + " val to comp is "+ ((float)currAmountKnots/(float)startAmountKnots)*100);
         }
+    }
+
+    private QT findRhoQT(StrFloatTuple smallyEpsi) {
+        String smollerPath = smallyEpsi.getPathway();
+        QT tempCute = this;
+        while (!smollerPath.isEmpty()){
+            tempCute = switch (smollerPath.charAt(0)) {
+                case '1' -> tempCute.getV1();
+                case '2' -> tempCute.getV2();
+                case '3' -> tempCute.getV3();
+                case '4' -> tempCute.getV4();
+                default -> tempCute;
+            };
+            smollerPath = smollerPath.substring(1);
+        }
+        return tempCute;
     }
 
 }
