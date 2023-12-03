@@ -1,13 +1,38 @@
-import java.util.Arrays;
-
 public class QT {
-    private int currLum; // if equals to -1 means you need to seek for the 4 children
+    private int currLum, selfLamb; // if equals to -1 means you need to seek for the 4 children
     private QT V1, V2, V3, V4;
+    private float selfEpsi;
     private int selfHeight; // where it is in the depth of the tree
 
     //constructor
     public QT(){
         // constructor, basically nothing happens here
+        this.selfLamb =-1;
+        this.selfEpsi=-1;
+    }
+
+    public void determineEpsiLamb(){
+        if (this.currLum==-1){
+            // goes to the deepest part so the children got their own lambda
+            this.getV1().determineEpsiLamb();
+            this.getV2().determineEpsiLamb();
+            this.getV3().determineEpsiLamb();
+            this.getV4().determineEpsiLamb();
+            // retrieves the children's lambda
+            int l1 = this.getV1().getSelfLamb();
+            int l2 = this.getV2().getSelfLamb();
+            int l3 = this.getV3().getSelfLamb();
+            int l4 = this.getV4().getSelfLamb();
+            // compute this knot's lambda and epsilon
+            double lambdaComputation = Math.exp(0.25 * ((Math.log(0.1 + l1)) + (Math.log(0.1 + l2)) + (Math.log(0.1 + l3)) + (Math.log(0.1 + l4))));
+            this.selfLamb = (int) Math.round(lambdaComputation);
+            float lambda = (float) lambdaComputation;
+            float mLamb12 = Math.max(Math.abs(lambda-l1),Math.abs(lambda-l2));
+            float mLamb34 = Math.max(Math.abs(lambda-l3), Math.abs(lambda-l4));
+            this.selfEpsi = Math.max(mLamb12,mLamb34);
+        }else {
+            this.selfLamb = this.currLum;
+        }
     }
 
     public void arrToQT(int[][] tab, int height){
@@ -44,6 +69,14 @@ public class QT {
     // getters
 
     public int getCurrLum() { return currLum; }
+
+    public int getSelfLamb() {
+        return selfLamb;
+    }
+
+    public float getSelfEpsi() {
+        return selfEpsi;
+    }
 
     public QT getV1() { return V1; }
 
@@ -113,8 +146,7 @@ public class QT {
             int l3 = this.getV3().getCurrLum();
             int l4 = this.getV4().getCurrLum();
             if (l1!=-1 && l2!=-1 && l3!=-1 && l4!=-1){
-                int lambda = (int) Math.round(Math.exp(0.25*((Math.log(0.1+l1))+(Math.log(0.1+l2))+(Math.log(0.1+l3))+(Math.log(0.1+l4)))));
-                this.abandonChildren(lambda);
+                this.abandonChildren(this.getSelfLamb());
             }else {
                 this.getV1().tree_compression_lambda();
                 this.getV2().tree_compression_lambda();
@@ -125,36 +157,27 @@ public class QT {
         //Do nothing
     }
 
-    public StrFloatTuple[] smallestEpsi(String path) {
+    public StrFloatTuple smallestEpsi(String path) {
         if (this.getCurrLum() == -1) {
             int l1 = this.getV1().getCurrLum();
             int l2 = this.getV2().getCurrLum();
             int l3 = this.getV3().getCurrLum();
             int l4 = this.getV4().getCurrLum();
             if (l1 != -1 && l2 != -1 && l3 != -1 && l4 != -1) {
-                float lambda = (float) Math.exp(0.25 * ((Math.log(0.1 + l1)) + (Math.log(0.1 + l2)) + (Math.log(0.1 + l3)) + (Math.log(0.1 + l4))));
-                float L1 = Math.abs(l1 - lambda);
-                float L2 = Math.abs(l2 - lambda);
-                float L3 = Math.abs(l3 - lambda);
-                float L4 = Math.abs(l4 - lambda);
-                float epsi1 = Math.max(L1, L2);
-                float epsi2 = Math.max(L3, L4);
-                float epsi = Math.round(Math.max(epsi1, epsi2));
-                return new StrFloatTuple[]{new StrFloatTuple(path,epsi)};
-                //TODO: Il faut faire de l'abandon d'enfant ici
+                return new StrFloatTuple(path,this.getSelfEpsi());
             }else {
-                StrFloatTuple[] v1Epsis = this.getV1().smallestEpsi(path+"1");
-                StrFloatTuple[] v2Epsis = this.getV2().smallestEpsi(path+"2");
-                StrFloatTuple[] v3Epsis = this.getV3().smallestEpsi(path+"3");
-                StrFloatTuple[] v4Epsis = this.getV4().smallestEpsi(path+"4");
+                StrFloatTuple v1Epsis = this.getV1().smallestEpsi(path+"1");
+                StrFloatTuple v2Epsis = this.getV2().smallestEpsi(path+"2");
+                StrFloatTuple v3Epsis = this.getV3().smallestEpsi(path+"3");
+                StrFloatTuple v4Epsis = this.getV4().smallestEpsi(path+"4");
                 // now gotta return the concatenation of those 4 arrays
                 //merging 1 and 2
                 // gotta check null val before
-                StrFloatTuple[] v12Epsis = StrFloatTuple.sFMerge(v1Epsis, v2Epsis);
+                StrFloatTuple v12Epsis = StrFloatTuple.sFChooseSmallest(v1Epsis, v2Epsis);
                 //merging 3 and 4
-                StrFloatTuple[] v34Epsis = StrFloatTuple.sFMerge(v3Epsis, v4Epsis);
+                StrFloatTuple v34Epsis = StrFloatTuple.sFChooseSmallest(v3Epsis, v4Epsis);
                 //merging 12 and 34
-                return StrFloatTuple.sFMerge(v12Epsis, v34Epsis);
+                return StrFloatTuple.sFChooseSmallest(v12Epsis, v34Epsis);
             }
         }
         return null;

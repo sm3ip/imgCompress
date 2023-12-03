@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class StrFloatTuple {
     private String pathway;
     private float epsilonVal;
@@ -17,21 +15,20 @@ public class StrFloatTuple {
         return pathway;
     }
 
-    public static StrFloatTuple[] sFMerge(StrFloatTuple[] v1Epsis, StrFloatTuple[] v2Epsis) {
+    public static StrFloatTuple sFChooseSmallest(StrFloatTuple v1Epsis, StrFloatTuple v2Epsis) {
         // might have to put it in its class
-        int v1Len = (v1Epsis == null)?(0):(v1Epsis.length);
-        int v2Len = (v2Epsis == null)?(0):(v2Epsis.length);
-        StrFloatTuple[] v12Epsis = null;
-        if (v1Len+v2Len==0){
-            //StrFloatTuple[]v12Epsis = null;
-        } else if (v1Len==0) {
-            v12Epsis = v2Epsis;
-        } else if (v2Len==0) {
-            v12Epsis = v1Epsis;
+        if (v1Epsis==null && v2Epsis==null){
+            return null;
+        } else if (v1Epsis==null) {
+            return v2Epsis;
+        } else if (v2Epsis==null) {
+            return v1Epsis;
         }else {
-            v12Epsis = Arrays.copyOf(v1Epsis,v1Epsis.length+v2Epsis.length);
-            System.arraycopy(v2Epsis,0,v12Epsis,v1Epsis.length,v2Epsis.length);
+            if (v1Epsis.getEpsilonVal()< v2Epsis.getEpsilonVal()){
+                return v1Epsis;
+            }else {
+                return v2Epsis;
+            }
         }
-        return v12Epsis;
     }
 }
