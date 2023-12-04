@@ -1,9 +1,85 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException {
+        Scanner reader = new Scanner(System.in);
         if (args == null){
+            // menu part
+            boolean wantsToGoOn = true;
+            String currentFile = "";
+            String lastQtLocation = "";
+            QuadTree loadedQT;
+            int startAmountKnot = 0;
+            while(wantsToGoOn){
+                System.out.println("Currently loaded pgm : " + currentFile);
+                System.out.println("What do you wanna do (press the number before the action to choose)?" +
+                        "\n 1- Choose a pgm to load amongst a list (you'll have to provide the absolute path to the directory containing those pgms)." +
+                        "\n 2- Apply a lambda compression on the currently loaded pgm and create its .qt file (you'll have to provide its name)." +
+                        "\n 3- Apply a rho compression on the currently loaded pgm and create its.qt file (you'll have to provide its name and the parameter p)." +
+                        "\n 4- Generate the pgm from the previously created .qt file (can also create a pgm from a provided and well-built .qt file)." +
+                        "\n 5- Show the compression statistics ( if you haven't reloaded a pgm in between multiple compressions the stats will take it into account)." +
+                        "\n Any other input will result in the termination of this application.");
+                int answer = Integer.parseInt(reader.nextLine());
+                switch (answer){
+                    case 1:
+                        System.out.println("Please provide your pgm directory's absolute path : ");
+                        File pgsDir = new File(reader.nextLine());
+                        if (pgsDir.exists()){
+
+                            String[] pgmsfiles = pgsDir.list();
+
+                            System.out.println("Press the number appearing before the wanted file");
+                            int countPgs = 0;
+                            for(int i = 0; i< Objects.requireNonNull(pgmsfiles).length; i++){
+                                if (pgmsfiles[i].endsWith(".pgm")){
+                                    countPgs++;
+                                    System.out.println(i+" : "+ pgmsfiles[i]);
+                                }
+                            }
+                            if (countPgs >0){
+                                String selectedPgm = "";
+                                while (selectedPgm.isEmpty()){
+                                    int tempChoice = reader.nextInt();
+                                    if (pgmsfiles[tempChoice].endsWith(".pgm")){
+                                        selectedPgm = pgmsfiles[tempChoice];
+                                    }else {
+                                        System.out.println("This wasn't a pgm file, please choose again.");
+                                    }
+                                }
+                                // load it now
+                                currentFile = selectedPgm;
+                                try{
+                                    loadedQT = new QuadTree(currentFile);
+                                    startAmountKnot = loadedQT.getKnot();
+                                    System.out.println("PGM file successfully loaded");
+                                }
+                                catch (FileNotFoundException e){
+                                    System.out.println(e);
+                                    currentFile = "";
+                                }
+
+                            }else {
+                                System.out.println("There are no .pgm file in the provided directory");
+                            }
+                        }else {
+                            System.out.println("The provided path doesn't seem to exist");
+                        }
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    default:
+                        break;
+                }
+            }
 
         }else {
             // part where the soft works by itself || the first param is the filename, the second is p
