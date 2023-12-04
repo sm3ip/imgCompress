@@ -19,13 +19,18 @@ public class QuadTree extends QT {
      *
      * @param file the pgm file location
      */
-    public QuadTree(String file){
+    public QuadTree(String file) throws FileNotFoundException {
         super();
         setFileRoute(file);
-        pgmToArr();
-        arrToQT(this.tab,0);
-        this.trueQT();
-        this.determineEpsiLamb();
+        try{
+            pgmToArr();
+            arrToQT(this.tab,0);
+            this.trueQT();
+            this.determineEpsiLamb();
+        } catch (FileNotFoundException e){
+            throw e;
+        }
+
     }
 
     // getters
@@ -99,7 +104,7 @@ public class QuadTree extends QT {
     /** Reads a pgm file and stores it as a int 2D-array
      *
      */
-    private void pgmToArr(){
+    private void pgmToArr() throws FileNotFoundException {
         //reading the file
         try{
             int count =0;
@@ -143,7 +148,8 @@ public class QuadTree extends QT {
             theReader.close();
         } catch (FileNotFoundException e){
             // if the file doesn't exist
-            System.out.println(e);
+            throw e;
+
         }
     }
 
@@ -338,7 +344,11 @@ public class QuadTree extends QT {
         int startAmountKnots = this.getKnot();
         int currAmountKnots = startAmountKnots;
         // while the compression is still not enough do it on the smallest epsilon
-        while (p<((float)currAmountKnots/(float)startAmountKnots)*100){
+        while (p<((float)currAmountKnots/(float)startAmountKnots)*100 && currAmountKnots>1){
+            // we wanna show progress at each occurence
+            float prog = 100 -((((float)currAmountKnots/(float)startAmountKnots)*100-p)/((float)100-p))*100;
+            String message = "Progress at "+ prog+"%";
+            System.out.println(message);
             // find the tree's smallest epsilon
             StrFloatTuple smallyEpsi = this.smallestEpsi("");
             // finds the corresponding knot
