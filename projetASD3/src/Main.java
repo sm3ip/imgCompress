@@ -6,12 +6,13 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) throws InterruptedException, IOException {
         Scanner reader = new Scanner(System.in);
-        if (args == null){
+        if (args.length == 0){
             // menu part
-            boolean wantsToGoOn = true;
-            String currentFile = "";
-            String lastQtLocation = "";
-            QuadTree loadedQT;
+            boolean wantsToGoOn = true; // continues the loop
+            String currentFile = ""; // the pgm being taken care of
+            String lastQtLocation = ""; // the last saved .qt
+            String comprDone =""; // all the compr done
+            QuadTree loadedQT = null; // the soft's qt
             int startAmountKnot = 0;
             while(wantsToGoOn){
                 System.out.println("Currently loaded pgm : " + currentFile);
@@ -42,22 +43,23 @@ public class Main {
                             if (countPgs >0){
                                 String selectedPgm = "";
                                 while (selectedPgm.isEmpty()){
-                                    int tempChoice = reader.nextInt();
-                                    if (pgmsfiles[tempChoice].endsWith(".pgm")){
+                                    int tempChoice = Integer.parseInt(reader.nextLine());
+                                    if (tempChoice< pgmsfiles.length && tempChoice>=0 &&pgmsfiles[tempChoice].endsWith(".pgm")){
                                         selectedPgm = pgmsfiles[tempChoice];
                                     }else {
                                         System.out.println("This wasn't a pgm file, please choose again.");
                                     }
                                 }
                                 // load it now
-                                currentFile = selectedPgm;
+                                currentFile = pgsDir.getAbsolutePath()+"\\"+selectedPgm;
                                 try{
                                     loadedQT = new QuadTree(currentFile);
                                     startAmountKnot = loadedQT.getKnot();
+                                    comprDone = "";
                                     System.out.println("PGM file successfully loaded");
                                 }
                                 catch (FileNotFoundException e){
-                                    System.out.println(e);
+                                    System.out.println(e + "  " + currentFile);
                                     currentFile = "";
                                 }
 
@@ -69,14 +71,73 @@ public class Main {
                         }
                         break;
                     case 2:
+                        if (!currentFile.isEmpty()) {
+                            // lambda compression
+                            loadedQT.lambdaCompr();
+                            comprDone +="\n lambda compression";
+                            System.out.println("Lambda compression done on "+ currentFile + "\n Compressions done : " +
+                                    "\n"+ comprDone);
+                            lastQtLocation = saveQtWithFilename(reader, lastQtLocation, loadedQT);
+                        }else {
+                            System.out.println("No pgm image where loaded, please do so before proceeding with a compression");
+                        }
                         break;
                     case 3:
+                        if (!currentFile.isEmpty()){
+                            int p=-1;
+                            while (p<1 || p>100){
+                                System.out.println("Please provide p : ");
+                                p = Integer.parseInt(reader.nextLine());
+                            }
+                            // Rho compression
+                            loadedQT.rhoCompr(p);
+                            comprDone += "\n rho compression with p = " + p;
+                            System.out.println("Rho compression done on "+ currentFile+"\n Compressions done : \n" + comprDone);
+                            lastQtLocation = saveQtWithFilename(reader, lastQtLocation, loadedQT);
+                        }else {
+                            System.out.println("No pgm image where loaded, please do so before proceeding with a compression");
+                        }
                         break;
                     case 4:
+                        System.out.println("Type 1 if you wanna provide your own .qt file (otherwise we'll generate the pgm from the previously built .qt file).");
+                        String qtLoc = "";
+                        if (Integer.parseInt(reader.nextLine())!=1){
+                            qtLoc = lastQtLocation;
+                        }else {
+                            while (qtLoc.isEmpty()) {
+                                System.out.println("Please provide the absolute path of your .qt file ");
+                                qtLoc = reader.nextLine();
+                                File temp = new File(qtLoc);
+                                if (!temp.exists()){
+                                    qtLoc = "";
+                                }
+                            }
+                        }
+                        if (!qtLoc.isEmpty()) {
+                            String filename = "";
+                            while (filename.isEmpty()) {
+                                System.out.println("Please provide the name with which you wanna save the pgm file :");
+                                filename = reader.nextLine();
+                                if (QuadTree.qtFileToPgm(qtLoc, System.getProperty("user.dir") + "\\" + filename + ".pgm")) {
+                                    System.out.println("Your pgm has successfully been generated at : " + System.getProperty("user.dir") + "\\" + filename + ".pgm");
+                                } else {
+                                    filename = "";
+                                    System.out.println("We couldn't save with this filename, please try again.");
+                                }
+                            }
+                        }else {
+                            System.out.println("Please load a pgm file beforehand");
+                        }
                         break;
                     case 5:
+                        String temp = (currentFile.isEmpty())?("There's no pgm file loaded,therefore we can't provide statistics"):("Compression statistics on : \n"
+                                +currentFile + "\n Compressions done : \n" + comprDone + "- amount of knots at first : " + startAmountKnot +
+                                "\n - amount of knot after compressions : " + loadedQT.getKnot()
+                                + "\n - Compression : "+ ((float)loadedQT.getKnot()/(float)startAmountKnot)*100 +"%");
+                        System.out.println(temp);
                         break;
                     default:
+                        wantsToGoOn = false;
                         break;
                 }
             }
@@ -172,5 +233,21 @@ public class Main {
         System.out.println(lamb);
         */
 
+    }
+
+    private static String saveQtWithFilename(Scanner reader, String lastQtLocation, QuadTree loadedQT) {
+        String filename = "";
+        while (filename.isEmpty()){
+            System.out.println("Please provide the name with which you wanna save the quadtree file :");
+            filename = reader.nextLine();
+            if (loadedQT.saveCurrentQT(System.getProperty("user.dir")+"\\"+filename+".qt")){
+                System.out.println("Your quadtree file has successfully been saved at : " + System.getProperty("user.dir")+"\\"+filename+".qt");
+                lastQtLocation = System.getProperty("user.dir")+"\\"+filename+".qt";
+            } else {
+                filename = "";
+                System.out.println("We couldn't save with this filename, please try again.");
+            }
+        }
+        return lastQtLocation;
     }
 }
