@@ -340,6 +340,8 @@ public class QuadTree extends QT {
      * @param p the int parameter deciding of the compression's strength
      */
     public void rhoCompr(int p){
+        // finds the epsilons
+        StrFloatList smallEpsi = this.smallestEpsi("");
         // saves the amount of knots at the start
         int startAmountKnots = this.getKnot();
         int currAmountKnots = startAmountKnots;
@@ -350,12 +352,25 @@ public class QuadTree extends QT {
             String message = "Progress at "+ prog+"%";
             System.out.println(message);
             // find the tree's smallest epsilon
-            StrFloatTuple smallyEpsi = this.smallestEpsi("");
+            StrFloatList smallyEpsi = StrFloatList.pop(smallEpsi);
+
+
+
             // finds the corresponding knot
             QT tempCute = findRhoQT(smallyEpsi);
             tempCute.tree_compression_lambda();
             this.trueQT();
             currAmountKnots = this.getKnot();
+            // gotta update the list to maybe add the parent if he doesn't have any children
+            if (smallyEpsi.getPathway().length()>1){ // to get the parent's pathway
+                System.out.println(smallyEpsi.getPathway());
+                smallyEpsi.setPathway(smallyEpsi.getPathway().substring(0,smallyEpsi.getPathway().length()-1));
+                System.out.println(smallyEpsi.getPathway());
+                tempCute = findRhoQT(smallyEpsi);
+                if (tempCute!=null&&tempCute.getCurrLum()==-1&&tempCute.getV1().getCurrLum()!=-1&&tempCute.getV2().getCurrLum()!=-1&&tempCute.getV3().getCurrLum()!=-1&&tempCute.getV4().getCurrLum()!=-1){
+                    smallEpsi = StrFloatList.sFAdd(smallEpsi, new StrFloatList(smallyEpsi.getPathway(), tempCute.getSelfEpsi()));
+                }
+            }
         }
     }
 
@@ -364,7 +379,7 @@ public class QuadTree extends QT {
      * @param smallyEpsi contains the pathway to the knot
      * @return returns the searched quadTree
      */
-    private QT findRhoQT(StrFloatTuple smallyEpsi) {
+    private QT findRhoQT(StrFloatList smallyEpsi) {
         String smollerPath = smallyEpsi.getPathway();
         QT tempCute = this;
         while (!smollerPath.isEmpty()){

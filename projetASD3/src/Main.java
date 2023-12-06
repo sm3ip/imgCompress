@@ -143,6 +143,9 @@ public class Main {
             }
 
         }else {
+            //timing
+            long startTime = System.currentTimeMillis();
+
             // part where the soft works by itself || the first param is the filename, the second is p
             // DONE: check if params are good; load pgm; do lambda;
             //TODO:   create .qt; create .pgm; read out loud stats;
@@ -184,6 +187,8 @@ public class Main {
                     System.out.println("Closing application ...");
                 }
             }
+            long endTime = System.currentTimeMillis();
+            System.out.println("Time taken : "+ (endTime-startTime)+"ms");
         }
 
 

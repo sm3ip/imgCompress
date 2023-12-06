@@ -254,7 +254,7 @@ public class QT {
      * @param path the path used to get to the current knot
      * @return a tuple composed of the path to the quadtree and its epsilon
      */
-    public StrFloatTuple smallestEpsi(String path) {
+    public StrFloatList smallestEpsi(String path) {
         if (this.getCurrLum() == -1) {
             int l1 = this.getV1().getCurrLum();
             int l2 = this.getV2().getCurrLum();
@@ -262,20 +262,20 @@ public class QT {
             int l4 = this.getV4().getCurrLum();
             if (l1 != -1 && l2 != -1 && l3 != -1 && l4 != -1) {
                 // in the case where this knot has children which don't have children we return this knot's epsilon
-                return new StrFloatTuple(path,this.getSelfEpsi());
+                return new StrFloatList(path,this.getSelfEpsi());
             }else {
                 // if they have children we call the function recursively upon them while also updating the path
-                StrFloatTuple v1Epsis = this.getV1().smallestEpsi(path+"1");
-                StrFloatTuple v2Epsis = this.getV2().smallestEpsi(path+"2");
-                StrFloatTuple v3Epsis = this.getV3().smallestEpsi(path+"3");
-                StrFloatTuple v4Epsis = this.getV4().smallestEpsi(path+"4");
+                StrFloatList v1Epsis = this.getV1().smallestEpsi(path+"1");
+                StrFloatList v2Epsis = this.getV2().smallestEpsi(path+"2");
+                StrFloatList v3Epsis = this.getV3().smallestEpsi(path+"3");
+                StrFloatList v4Epsis = this.getV4().smallestEpsi(path+"4");
                 // now gotta find the smallest epsilon amongst them
                 //comparing 1 and 2
-                StrFloatTuple v12Epsis = StrFloatTuple.sFChooseSmallest(v1Epsis, v2Epsis);
+                StrFloatList v12Epsis = StrFloatList.sFAdd(v1Epsis, v2Epsis);
                 //comparing 3 and 4
-                StrFloatTuple v34Epsis = StrFloatTuple.sFChooseSmallest(v3Epsis, v4Epsis);
+                StrFloatList v34Epsis = StrFloatList.sFAdd(v3Epsis, v4Epsis);
                 //comparing 12 and 34
-                return StrFloatTuple.sFChooseSmallest(v12Epsis, v34Epsis);
+                return StrFloatList.sFAdd(v12Epsis, v34Epsis);
             }
         }
         return null;
