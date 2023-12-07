@@ -9,7 +9,7 @@ public class SubArray {
      * @return a 2d array of size : sizexsize
     * */
     public static int[][] copySubArray(int [][] origin, int orX, int orY, int size ){
-        // first we take care of peculiar cases where our approach doesn't necessarily work
+        // first we take care of edge cases where our approach doesn't necessarily work
         if (origin == null){
             return null;
         } else if (size ==0) {
