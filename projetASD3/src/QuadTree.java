@@ -357,12 +357,12 @@ public class QuadTree extends QT {
 
 
             // finds the corresponding knot
-            QT tempCute = smallyEpsi.getPathway();
+            QT tempCute = smallyEpsi.getQtObj();
             //tempCute.tree_compression_lambda();
             tempCute.abandonChildren(tempCute.getSelfLamb());
             // now check if tempCute's parent would be a "brindille"
             if (tempCute.getParent().isATwig()){
-                smallEpsi = StrFloatList.sFAdd(smallEpsi, new StrFloatList(tempCute.getParent(),tempCute.getParent().getSelfEpsi()));
+                smallEpsi = StrFloatList.sFAdd(smallEpsi, new StrFloatList(tempCute.getParent()));
             }
 
             currAmountKnots -= 4;

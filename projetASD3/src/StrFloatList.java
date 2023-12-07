@@ -1,18 +1,16 @@
 /** Represent a data structure holding a String and a float
  * */
 public class StrFloatList {
-    private QT pathway;
-    private float epsilonVal;
+    private QT qtObj;
 
     private StrFloatList next;
 
     /** Creates a tuple
      * @param _pathway the path to get to the corresponding knot in the QT
-     * @param _epsilonValue the epsilon value of this specific knot
      */
-    public StrFloatList(QT _pathway, float _epsilonValue){
-        this.pathway=_pathway;
-        this.epsilonVal=_epsilonValue;
+    public StrFloatList(QT _pathway){
+        this.qtObj =_pathway;
+        //this.epsilonVal=_epsilonValue;
         next = null;
     }
 
@@ -23,19 +21,19 @@ public class StrFloatList {
      * @return the value of epsilon
      */
     public float getEpsilonVal() {
-        return epsilonVal;
+        return qtObj.getSelfEpsi();
     }
 
     /** Gets the pathway
      *
      * @return a string containing a path leading to the knot
      */
-    public QT getPathway() {
-        return pathway;
+    public QT getQtObj() {
+        return qtObj;
     }
 
-    public void setPathway(QT pathway) {
-        this.pathway = pathway;
+    public void setQtObj(QT qtObj) {
+        this.qtObj = qtObj;
     }
 
     /** Chooses the smallest epsilon between two tuples
@@ -53,16 +51,14 @@ public class StrFloatList {
         } else if (v2Epsis==null) {
             return v1Epsis;
         }else { // if not an edge case returns the smallest
-            StrFloatList beg = (v1Epsis.getEpsilonVal()< v2Epsis.epsilonVal)?(v1Epsis):(v2Epsis);
-            StrFloatList other = (v1Epsis.getEpsilonVal()>= v2Epsis.epsilonVal)?(v1Epsis):(v2Epsis);
+            StrFloatList beg = (v1Epsis.getEpsilonVal()< v2Epsis.getEpsilonVal())?(v1Epsis):(v2Epsis);
+            StrFloatList other = (v1Epsis.getEpsilonVal()>= v2Epsis.getEpsilonVal())?(v1Epsis):(v2Epsis);
             StrFloatList iterator = beg;
             StrFloatList tmp = null;
             while (other !=null){
                 while (iterator.next !=null && iterator.next.getEpsilonVal()< other.getEpsilonVal()){
                     iterator = iterator.next;
-                    //System.out.println("deep");
                 }
-                //System.out.println("not too deep");
                 tmp = iterator.next;
                 iterator.next = other;
                 other = tmp;
@@ -73,9 +69,8 @@ public class StrFloatList {
     }
 
     public static StrFloatList pop(StrFloatList me){
-        StrFloatList temp = new StrFloatList(me.getPathway(), me.getEpsilonVal());
-        me.epsilonVal = me.next.epsilonVal;
-        me.pathway=me.next.getPathway();
+        StrFloatList temp = new StrFloatList(me.getQtObj());
+        me.qtObj =me.next.getQtObj();
         me.next=me.next.next;
         return temp;
     }

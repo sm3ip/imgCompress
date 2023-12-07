@@ -302,7 +302,7 @@ public class QT {
     public StrFloatList smallestEpsi() {
         if (this.getCurrLum() == -1) {
             if (this.getV1().getCurrLum()!=-1 && this.getV2().getCurrLum()!=-1 && this.getV3().getCurrLum()!=-1 && this.getV4().getCurrLum()!=-1){
-                return new StrFloatList(this,this.getSelfEpsi());
+                return new StrFloatList(this);
             }else {
                 // if they have children we call the function recursively upon them while also updating the path
                 StrFloatList v1Epsis = this.getV1().smallestEpsi();
