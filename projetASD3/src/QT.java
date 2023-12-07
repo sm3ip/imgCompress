@@ -299,23 +299,23 @@ public class QT {
      *
      * @return a tuple composed of the path to the quadtree and its epsilon
      */
-    public StrFloatList smallestEpsi() {
+    public QtList smallestEpsi() {
         if (this.getCurrLum() == -1) {
             if (this.getV1().getCurrLum()!=-1 && this.getV2().getCurrLum()!=-1 && this.getV3().getCurrLum()!=-1 && this.getV4().getCurrLum()!=-1){
-                return new StrFloatList(this);
+                return new QtList(this);
             }else {
                 // if they have children we call the function recursively upon them while also updating the path
-                StrFloatList v1Epsis = this.getV1().smallestEpsi();
-                StrFloatList v2Epsis = this.getV2().smallestEpsi();
-                StrFloatList v3Epsis = this.getV3().smallestEpsi();
-                StrFloatList v4Epsis = this.getV4().smallestEpsi();
+                QtList v1Epsis = this.getV1().smallestEpsi();
+                QtList v2Epsis = this.getV2().smallestEpsi();
+                QtList v3Epsis = this.getV3().smallestEpsi();
+                QtList v4Epsis = this.getV4().smallestEpsi();
                 // now gotta find the smallest epsilon amongst them
                 //comparing 1 and 2
-                StrFloatList v12Epsis = StrFloatList.sFAdd(v1Epsis, v2Epsis);
+                QtList v12Epsis = QtList.sFAdd(v1Epsis, v2Epsis);
                 //comparing 3 and 4
-                StrFloatList v34Epsis = StrFloatList.sFAdd(v3Epsis, v4Epsis);
+                QtList v34Epsis = QtList.sFAdd(v3Epsis, v4Epsis);
                 //comparing 12 and 34
-                return StrFloatList.sFAdd(v12Epsis, v34Epsis);
+                return QtList.sFAdd(v12Epsis, v34Epsis);
             }
         }else {
             return null;

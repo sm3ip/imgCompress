@@ -341,7 +341,7 @@ public class QuadTree extends QT {
      */
     public void rhoCompr(int p){
         // finds the epsilons
-        StrFloatList smallEpsi = this.smallestEpsi();
+        QtList smallEpsi = this.smallestEpsi();
         // saves the amount of knots at the start
         int startAmountKnots = this.getKnot();
         int currAmountKnots = startAmountKnots;
@@ -352,7 +352,7 @@ public class QuadTree extends QT {
             String message = "Progress at "+ prog+"%";
             System.out.println(message);
             // find the tree's smallest epsilon
-            StrFloatList smallyEpsi = StrFloatList.pop(smallEpsi);
+            QtList smallyEpsi = QtList.pop(smallEpsi);
 
 
 
@@ -362,7 +362,7 @@ public class QuadTree extends QT {
             tempCute.abandonChildren(tempCute.getSelfLamb());
             // now check if tempCute's parent would be a "brindille"
             if (tempCute.getParent().isATwig()){
-                smallEpsi = StrFloatList.sFAdd(smallEpsi, new StrFloatList(tempCute.getParent()));
+                smallEpsi = QtList.sFAdd(smallEpsi, new QtList(tempCute.getParent()));
             }
 
             currAmountKnots -= 4;
