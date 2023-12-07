@@ -24,7 +24,7 @@ public class QuadTree extends QT {
         setFileRoute(file);
         try{
             pgmToArr();
-            arrToQT(this.tab,0);
+            arrToQT(this.tab,0,null);
             this.trueQT();
             this.determineEpsiLamb();
         } catch (FileNotFoundException e){
@@ -340,6 +340,8 @@ public class QuadTree extends QT {
      * @param p the int parameter deciding of the compression's strength
      */
     public void rhoCompr(int p){
+        // finds the epsilons
+        StrFloatList smallEpsi = this.smallestEpsi();
         // saves the amount of knots at the start
         int startAmountKnots = this.getKnot();
         int currAmountKnots = startAmountKnots;
@@ -350,13 +352,23 @@ public class QuadTree extends QT {
             String message = "Progress at "+ prog+"%";
             System.out.println(message);
             // find the tree's smallest epsilon
-            StrFloatTuple smallyEpsi = this.smallestEpsi("");
+            StrFloatList smallyEpsi = StrFloatList.pop(smallEpsi);
+
+
+
             // finds the corresponding knot
-            QT tempCute = findRhoQT(smallyEpsi);
-            tempCute.tree_compression_lambda();
-            this.trueQT();
-            currAmountKnots = this.getKnot();
+            QT tempCute = smallyEpsi.getPathway();
+            //tempCute.tree_compression_lambda();
+            tempCute.abandonChildren(tempCute.getSelfLamb());
+            // now check if tempCute's parent would be a "brindille"
+            if (tempCute.getParent().isATwig()){
+                smallEpsi = StrFloatList.sFAdd(smallEpsi, new StrFloatList(tempCute.getParent(),tempCute.getParent().getSelfEpsi()));
+            }
+
+            currAmountKnots -= 4;
         }
+        this.trueQT(); // is it overkill ?
+
     }
 
     /** Finds a quadTree root through a path
@@ -364,20 +376,20 @@ public class QuadTree extends QT {
      * @param smallyEpsi contains the pathway to the knot
      * @return returns the searched quadTree
      */
-    private QT findRhoQT(StrFloatTuple smallyEpsi) {
-        String smollerPath = smallyEpsi.getPathway();
-        QT tempCute = this;
-        while (!smollerPath.isEmpty()){
-            tempCute = switch (smollerPath.charAt(0)) {
-                case '1' -> tempCute.getV1();
-                case '2' -> tempCute.getV2();
-                case '3' -> tempCute.getV3();
-                case '4' -> tempCute.getV4();
-                default -> tempCute;
-            };
-            smollerPath = smollerPath.substring(1);
-        }
-        return tempCute;
-    }
+    //private QT findRhoQT(StrFloatList smallyEpsi) {
+    //    String smollerPath = smallyEpsi.getPathway();
+    //    QT tempCute = this;
+    //    while (!smollerPath.isEmpty()){
+    //        tempCute = switch (smollerPath.charAt(0)) {
+    //            case '1' -> tempCute.getV1();
+    //            case '2' -> tempCute.getV2();
+    //            case '3' -> tempCute.getV3();
+    //            case '4' -> tempCute.getV4();
+    //            default -> tempCute;
+    //        };
+    //        smollerPath = smollerPath.substring(1);
+    //    }
+    //    return tempCute;
+    //}
 
 }

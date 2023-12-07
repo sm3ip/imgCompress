@@ -2,7 +2,7 @@
  */
 public class QT {
     private int currLum, selfLamb;
-    private QT V1, V2, V3, V4;
+    private QT V1, V2, V3, V4, parent;
     private float selfEpsi;
     private int selfHeight; // might be useless
 
@@ -64,6 +64,10 @@ public class QT {
      */
     public QT getV4() { return V4; }
 
+    public QT getParent() {
+        return parent;
+    }
+
     /** Get this knot's height
      *
      * @return the depth at wich this knot is
@@ -71,6 +75,11 @@ public class QT {
     public int getSelfHeight() { return selfHeight; }
 
     // setters
+
+
+    public void setParent(QT parent) {
+        this.parent = parent;
+    }
 
     /** Sets this knot's luminosity value
      *
@@ -82,25 +91,45 @@ public class QT {
      *
      * @param v1 a quadtree
      */
-    public void setV1(QT v1) { V1 = v1; }
+    public void setV1(QT v1) {
+        V1 = v1;
+        if (this.V1!=null) {
+            this.V1.setParent(this);
+        }
+    }
 
     /** Sets this knot's top-right child
      *
      * @param v2 a quadtree
      */
-    public void setV2(QT v2) { V2 = v2; }
+    public void setV2(QT v2) {
+        V2 = v2;
+        if (this.getV2()!=null) {
+            this.V2.setParent(this);
+        }
+    }
 
     /** Sets this knot's bottom-right child
      *
      * @param v3 a quadtree
      */
-    public void setV3(QT v3) { V3 = v3; }
+    public void setV3(QT v3) {
+        V3 = v3;
+        if (this.getV3()!=null) {
+            this.V3.setParent(this);
+        }
+    }
 
     /** Sets this knot's bottom-left child
      *
      * @param v4 a quadtree
      */
-    public void setV4(QT v4) { V4 = v4; }
+    public void setV4(QT v4) {
+        V4 = v4;
+        if (this.V4!=null) {
+            this.V4.setParent(this);
+        }
+    }
 
     /** Sets this knot's height
      *
@@ -167,8 +196,9 @@ public class QT {
      * @param tab the 2D-array containing the picture's data
      * @param height the knot's height
      */
-    public void arrToQT(int[][] tab, int height){
+    public void arrToQT(int[][] tab, int height,QT parent){
         this.selfHeight = height;
+        this.parent = parent;
         // checks if all values in the array are equal
         boolean isEqual = isTabAllEqual(tab);
         if (isEqual){ // this Knot won't have children
@@ -178,13 +208,13 @@ public class QT {
             this.currLum = -1;
             height++;
             this.V1 = new QT();
-            this.V1.arrToQT(SubArray.copySubArray(tab,0,0,tab.length/2), height);
+            this.V1.arrToQT(SubArray.copySubArray(tab,0,0,tab.length/2), height,this);
             this.V2 = new QT();
-            this.V2.arrToQT(SubArray.copySubArray(tab,tab.length/2,0,tab.length/2), height);
+            this.V2.arrToQT(SubArray.copySubArray(tab,tab.length/2,0,tab.length/2), height,this);
             this.V3 = new QT();
-            this.V3.arrToQT(SubArray.copySubArray(tab,tab.length/2,tab.length/2,tab.length/2), height);
+            this.V3.arrToQT(SubArray.copySubArray(tab,tab.length/2,tab.length/2,tab.length/2), height,this);
             this.V4 = new QT();
-            this.V4.arrToQT(SubArray.copySubArray(tab,0,tab.length/2,tab.length/2), height);
+            this.V4.arrToQT(SubArray.copySubArray(tab,0,tab.length/2,tab.length/2), height,this);
         }
     }
 
@@ -194,10 +224,22 @@ public class QT {
      */
     public void abandonChildren(int lum){
         setCurrLum(lum);
-        setV1(null);
-        setV2(null);
-        setV3(null);
-        setV4(null);
+        if (this.getV1()!=null) {
+            this.getV1().setParent(null);
+            setV1(null);
+        }
+        if (this.getV2()!=null) {
+            this.getV2().setParent(null);
+            setV2(null);
+        }
+        if (this.getV3()!=null) {
+            this.getV3().setParent(null);
+            setV3(null);
+        }
+        if (this.getV4()!=null) {
+            this.getV4().setParent(null);
+            setV4(null);
+        }
     }
 
     /** Checks if this quadtree as the correct format to be considered as a quadtree
@@ -249,35 +291,34 @@ public class QT {
         }
     }
 
+    public boolean isATwig(){
+        return (this.getV1().getCurrLum()!=-1 &&this.getV2().getCurrLum()!=-1&& this.getV3().getCurrLum()!=-1&& this.getV4().getCurrLum()!=-1);
+    }
+
     /** Retrieves the knot containing the smallest epsilon
      *
-     * @param path the path used to get to the current knot
      * @return a tuple composed of the path to the quadtree and its epsilon
      */
-    public StrFloatTuple smallestEpsi(String path) {
+    public StrFloatList smallestEpsi() {
         if (this.getCurrLum() == -1) {
-            int l1 = this.getV1().getCurrLum();
-            int l2 = this.getV2().getCurrLum();
-            int l3 = this.getV3().getCurrLum();
-            int l4 = this.getV4().getCurrLum();
-            if (l1 != -1 && l2 != -1 && l3 != -1 && l4 != -1) {
-                // in the case where this knot has children which don't have children we return this knot's epsilon
-                return new StrFloatTuple(path,this.getSelfEpsi());
+            if (this.getV1().getCurrLum()!=-1 && this.getV2().getCurrLum()!=-1 && this.getV3().getCurrLum()!=-1 && this.getV4().getCurrLum()!=-1){
+                return new StrFloatList(this,this.getSelfEpsi());
             }else {
                 // if they have children we call the function recursively upon them while also updating the path
-                StrFloatTuple v1Epsis = this.getV1().smallestEpsi(path+"1");
-                StrFloatTuple v2Epsis = this.getV2().smallestEpsi(path+"2");
-                StrFloatTuple v3Epsis = this.getV3().smallestEpsi(path+"3");
-                StrFloatTuple v4Epsis = this.getV4().smallestEpsi(path+"4");
+                StrFloatList v1Epsis = this.getV1().smallestEpsi();
+                StrFloatList v2Epsis = this.getV2().smallestEpsi();
+                StrFloatList v3Epsis = this.getV3().smallestEpsi();
+                StrFloatList v4Epsis = this.getV4().smallestEpsi();
                 // now gotta find the smallest epsilon amongst them
                 //comparing 1 and 2
-                StrFloatTuple v12Epsis = StrFloatTuple.sFChooseSmallest(v1Epsis, v2Epsis);
+                StrFloatList v12Epsis = StrFloatList.sFAdd(v1Epsis, v2Epsis);
                 //comparing 3 and 4
-                StrFloatTuple v34Epsis = StrFloatTuple.sFChooseSmallest(v3Epsis, v4Epsis);
+                StrFloatList v34Epsis = StrFloatList.sFAdd(v3Epsis, v4Epsis);
                 //comparing 12 and 34
-                return StrFloatTuple.sFChooseSmallest(v12Epsis, v34Epsis);
+                return StrFloatList.sFAdd(v12Epsis, v34Epsis);
             }
+        }else {
+            return null;
         }
-        return null;
     }
 }
