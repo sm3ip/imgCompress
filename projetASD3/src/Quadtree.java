@@ -8,7 +8,7 @@ import java.io.FileWriter;
  *
  * @see QT
  */
-public class QuadTree extends QT {
+public class Quadtree extends QT {
     private int maxLum;
     private int size;
     private int[][] tab;
@@ -19,7 +19,7 @@ public class QuadTree extends QT {
      *
      * @param file the pgm file location
      */
-    public QuadTree(String file) throws FileNotFoundException {
+    public Quadtree(String file) throws FileNotFoundException {
         super();
         setFileRoute(file);
         try{
@@ -193,29 +193,14 @@ public class QuadTree extends QT {
         return true;
     }
 
-    /** Reads a quadtree file and creates the corresponding pgm file
-     *
-     * @param location String containing the quadTree File's location
-     * @param producedLocation String containing the location inwhich the pgm will be stored
-     * @return true if achieved, false otherwise
-     */
-    public static boolean qtFileToPgm(String location,String producedLocation){
-        // retrieves the quadTree data as a String
-        String temp = "";
-        try{
-            File qtFile = new File(location);
-            Scanner theReader = new Scanner(qtFile);
-            while (theReader.hasNextLine()){
-                temp = theReader.nextLine();
-            }
-            theReader.close();
-        } catch (FileNotFoundException e){
-            System.out.println(e);
-            return false;
-        }
+    public boolean toPGM(String location){
+        return strToPgm(this.toString(),location);
+    }
+
+    public static boolean strToPgm(String file,String newLocation){
         //processes the data
         // format is size:maxlum:(V1;V2;V3;V4)
-        String[] data = temp.split(":");
+        String[] data = file.split(":");
         int size = Integer.parseInt(data[0]);
         int maxLum = Integer.parseInt(data[1]);
         int[][] tempTab = new int[size][size];
@@ -281,7 +266,7 @@ public class QuadTree extends QT {
             }
 
             //updates last char when we get to the next token
-            if (whereWeAt !=null && whereWeAt.length()>0){
+            if (whereWeAt !=null && !whereWeAt.isEmpty()){
                 char lastChar =whereWeAt.charAt(whereWeAt.length()-1);
                 whereWeAt = whereWeAt.substring(0,whereWeAt.length()-1) + (Character.getNumericValue(lastChar)+1);
             }
@@ -289,7 +274,7 @@ public class QuadTree extends QT {
         }
         // the data struct is saved in this function, now is the time to write it into a file
         try{ // creates the file
-            File newPgmFile = new File(producedLocation);
+            File newPgmFile = new File(newLocation);
             if (newPgmFile.createNewFile()){
                 System.out.println("Pgm File has been created");
             }else {
@@ -303,7 +288,7 @@ public class QuadTree extends QT {
 
         // writes in the file
         try{
-            FileWriter writy = new FileWriter(producedLocation);
+            FileWriter writy = new FileWriter(newLocation);
             // writing header's data
             writy.write("P2" + System.getProperty("line.separator"));
             writy.write("# This generated pgm has been brought to you through Emile Bonmarriage and Lucas Pereira's hardwork" + System.getProperty("line.separator"));
@@ -327,10 +312,33 @@ public class QuadTree extends QT {
         return true;
     }
 
+    /** Reads a quadtree file and creates the corresponding pgm file
+     *
+     * @param location String containing the quadTree File's location
+     * @param producedLocation String containing the location inwhich the pgm will be stored
+     * @return true if achieved, false otherwise
+     */
+    public static boolean qtFileToPgm(String location,String producedLocation){
+        // retrieves the quadTree data as a String
+        String temp = "";
+        try{
+            File qtFile = new File(location);
+            Scanner theReader = new Scanner(qtFile);
+            while (theReader.hasNextLine()){
+                temp = theReader.nextLine();
+            }
+            theReader.close();
+        } catch (FileNotFoundException e){
+            System.out.println(e);
+            return false;
+        }
+        return strToPgm(temp,producedLocation);
+    }
+
     /** Does the lambda compression and makes sure that the new quadtree is still a true quadtree
      *
      */
-    public void lambdaCompr(){
+    public void compressLambda(){
         this.tree_compression_lambda(); // do the compression
         this.trueQT(); // gets it back as an actual quadTree
     }
@@ -339,7 +347,8 @@ public class QuadTree extends QT {
      *
      * @param p the int parameter deciding of the compression's strength
      */
-    public void rhoCompr(int p){
+    public boolean compressRho(int p){
+        if (p<0||p>100){return false;}
         // finds the epsilons
         QtList smallEpsi = this.smallestEpsi();
         // saves the amount of knots at the start
@@ -353,9 +362,6 @@ public class QuadTree extends QT {
             System.out.println(message);
             // find the tree's smallest epsilon
             QtList smallyEpsi = QtList.pop(smallEpsi);
-
-
-
             // finds the corresponding knot
             QT tempCute = smallyEpsi.getQtObj();
             //tempCute.tree_compression_lambda();
@@ -364,11 +370,10 @@ public class QuadTree extends QT {
             if (tempCute.getParent().isATwig()){
                 smallEpsi = QtList.sFAdd(smallEpsi, new QtList(tempCute.getParent()));
             }
-
             currAmountKnots -= 4;
         }
         this.trueQT(); // is it overkill ?
-
+        return true;
     }
 
     /** Finds a quadTree root through a path

@@ -12,7 +12,7 @@ public class Main {
             String currentFile = ""; // the pgm being taken care of
             String lastQtLocation = ""; // the last saved .qt
             String comprDone =""; // all the compr done
-            QuadTree loadedQT = null; // the soft's qt
+            Quadtree loadedQT = null; // the soft's qt
             int startAmountKnot = 0;
             while(wantsToGoOn){
                 System.out.println("Currently loaded pgm : " + currentFile);
@@ -53,7 +53,7 @@ public class Main {
                                 // load it now
                                 currentFile = pgsDir.getAbsolutePath()+"\\"+selectedPgm;
                                 try{
-                                    loadedQT = new QuadTree(currentFile);
+                                    loadedQT = new Quadtree(currentFile);
                                     startAmountKnot = loadedQT.getKnot();
                                     comprDone = "";
                                     System.out.println("PGM file successfully loaded");
@@ -73,7 +73,7 @@ public class Main {
                     case 2:
                         if (!currentFile.isEmpty()) {
                             // lambda compression
-                            loadedQT.lambdaCompr();
+                            loadedQT.compressLambda();
                             comprDone +="\n lambda compression";
                             System.out.println("Lambda compression done on "+ currentFile + "\n Compressions done : " +
                                     "\n"+ comprDone);
@@ -90,7 +90,7 @@ public class Main {
                                 p = Integer.parseInt(reader.nextLine());
                             }
                             // Rho compression
-                            loadedQT.rhoCompr(p);
+                            loadedQT.compressRho(p);
                             comprDone += "\n rho compression with p = " + p;
                             System.out.println("Rho compression done on "+ currentFile+"\n Compressions done : \n" + comprDone);
                             lastQtLocation = saveQtWithFilename(reader, lastQtLocation, loadedQT);
@@ -118,7 +118,7 @@ public class Main {
                             while (filename.isEmpty()) {
                                 System.out.println("Please provide the name with which you wanna save the pgm file :");
                                 filename = reader.nextLine();
-                                if (QuadTree.qtFileToPgm(qtLoc, System.getProperty("user.dir") + "\\" + filename + ".pgm")) {
+                                if (Quadtree.qtFileToPgm(qtLoc, System.getProperty("user.dir") + "\\" + filename + ".pgm")) {
                                     System.out.println("Your pgm has successfully been generated at : " + System.getProperty("user.dir") + "\\" + filename + ".pgm");
                                 } else {
                                     filename = "";
@@ -154,23 +154,23 @@ public class Main {
             if(p<1 || p>100){
                 System.out.println("The value of p isn't between 1 and 100; p = "+ p);
             }else {
-                QuadTree temp;
+                Quadtree temp;
                 try {
-                    temp = new QuadTree(args[0]);
+                    temp = new Quadtree(args[0]);
                     int nbKnotBefore = temp.getKnot();
                     // lambda compression
-                    temp.lambdaCompr();
+                    temp.compressLambda();
                     int nbKnotAfterLamb = temp.getKnot();
                     new File(System.getProperty("user.dir") + "\\QT").mkdirs(); //(would be /QT on linux)
                     if (temp.saveCurrentQT(System.getProperty("user.dir") + "\\QT\\lambda.qt")) {
                         new File(System.getProperty("user.dir") + "\\PGM").mkdirs(); //(would be /PGM on linux)
-                        QuadTree.qtFileToPgm(System.getProperty("user.dir") + "\\QT\\lambda.qt", System.getProperty("user.dir") + "\\PGM\\lambda.pgm");
+                        Quadtree.qtFileToPgm(System.getProperty("user.dir") + "\\QT\\lambda.qt", System.getProperty("user.dir") + "\\PGM\\lambda.pgm");
                         // rho compression
-                        temp = new QuadTree(args[0]);
-                        temp.rhoCompr(p);
+                        temp = new Quadtree(args[0]);
+                        temp.compressRho(p);
                         int nbKnotAfterRho = temp.getKnot();
                         if (temp.saveCurrentQT(System.getProperty("user.dir") + "\\QT\\rho.qt")) {
-                            QuadTree.qtFileToPgm(System.getProperty("user.dir") + "\\QT\\rho.qt", System.getProperty("user.dir") + "\\PGM\\rho.pgm");
+                            Quadtree.qtFileToPgm(System.getProperty("user.dir") + "\\QT\\rho.qt", System.getProperty("user.dir") + "\\PGM\\rho.pgm");
                             System.out.println("Compression stats : \n Lambda : \n - original number of knots : " + nbKnotBefore + " \n - current number of knots : " + nbKnotAfterLamb
                                     + "\n - Compression : " + ((float) nbKnotAfterLamb / (float) nbKnotBefore) * 100 + "% \n Rho : \n - original number of knots : "
                                     + nbKnotBefore + "\n - current number of knots : " + nbKnotAfterRho + "\n - compression : " + ((float) nbKnotAfterRho / (float) nbKnotBefore) * 100
@@ -240,7 +240,7 @@ public class Main {
 
     }
 
-    private static String saveQtWithFilename(Scanner reader, String lastQtLocation, QuadTree loadedQT) {
+    private static String saveQtWithFilename(Scanner reader, String lastQtLocation, Quadtree loadedQT) {
         String filename = "";
         while (filename.isEmpty()){
             System.out.println("Please provide the name with which you wanna save the quadtree file :");
