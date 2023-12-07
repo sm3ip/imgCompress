@@ -193,10 +193,21 @@ public class Quadtree extends QT {
         return true;
     }
 
+    /** Saves the current stored quadtree as a pgm file at a given location
+     *
+     * @param location the path to where the file is gonna be generated
+     * @return true if works, false if otherwise
+     */
     public boolean toPGM(String location){
         return strToPgm(this.toString(),location);
     }
 
+    /** Saves a quadtree in the format of a String to a given location
+     *
+     * @param file quadtree as a tostring
+     * @param newLocation the path to where the file is gonna be generated
+     * @return true if works, false if otherwise
+     */
     public static boolean strToPgm(String file,String newLocation){
         //processes the data
         // format is size:maxlum:(V1;V2;V3;V4)
@@ -375,26 +386,4 @@ public class Quadtree extends QT {
         this.trueQT(); // is it overkill ?
         return true;
     }
-
-    /** Finds a quadTree root through a path
-     *
-     * @param smallyEpsi contains the pathway to the node
-     * @return returns the searched quadTree
-     */
-    //private QT findRhoQT(StrFloatList smallyEpsi) {
-    //    String smollerPath = smallyEpsi.getPathway();
-    //    QT tempCute = this;
-    //    while (!smollerPath.isEmpty()){
-    //        tempCute = switch (smollerPath.charAt(0)) {
-    //            case '1' -> tempCute.getV1();
-    //            case '2' -> tempCute.getV2();
-    //            case '3' -> tempCute.getV3();
-    //            case '4' -> tempCute.getV4();
-    //            default -> tempCute;
-    //        };
-    //        smollerPath = smollerPath.substring(1);
-    //    }
-    //    return tempCute;
-    //}
-
 }
