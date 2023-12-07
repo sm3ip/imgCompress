@@ -54,7 +54,7 @@ public class Main {
                                 currentFile = pgsDir.getAbsolutePath()+"\\"+selectedPgm;
                                 try{
                                     loadedQT = new Quadtree(currentFile);
-                                    startAmountKnot = loadedQT.getKnot();
+                                    startAmountKnot = loadedQT.getNodes();
                                     comprDone = "";
                                     System.out.println("PGM file successfully loaded");
                                 }
@@ -132,8 +132,8 @@ public class Main {
                     case 5:
                         String temp = (currentFile.isEmpty())?("There's no pgm file loaded,therefore we can't provide statistics"):("Compression statistics on : \n"
                                 +currentFile + "\n Compressions done : \n" + comprDone + "- amount of knots at first : " + startAmountKnot +
-                                "\n - amount of knot after compressions : " + loadedQT.getKnot()
-                                + "\n - Compression : "+ ((float)loadedQT.getKnot()/(float)startAmountKnot)*100 +"%");
+                                "\n - amount of knot after compressions : " + loadedQT.getNodes()
+                                + "\n - Compression : "+ ((float)loadedQT.getNodes()/(float)startAmountKnot)*100 +"%");
                         System.out.println(temp);
                         break;
                     default:
@@ -157,10 +157,10 @@ public class Main {
                 Quadtree temp;
                 try {
                     temp = new Quadtree(args[0]);
-                    int nbKnotBefore = temp.getKnot();
+                    int nbKnotBefore = temp.getNodes();
                     // lambda compression
                     temp.compressLambda();
-                    int nbKnotAfterLamb = temp.getKnot();
+                    int nbKnotAfterLamb = temp.getNodes();
                     new File(System.getProperty("user.dir") + "\\QT").mkdirs(); //(would be /QT on linux)
                     if (temp.saveCurrentQT(System.getProperty("user.dir") + "\\QT\\lambda.qt")) {
                         new File(System.getProperty("user.dir") + "\\PGM").mkdirs(); //(would be /PGM on linux)
@@ -168,7 +168,7 @@ public class Main {
                         // rho compression
                         temp = new Quadtree(args[0]);
                         temp.compressRho(p);
-                        int nbKnotAfterRho = temp.getKnot();
+                        int nbKnotAfterRho = temp.getNodes();
                         if (temp.saveCurrentQT(System.getProperty("user.dir") + "\\QT\\rho.qt")) {
                             Quadtree.qtFileToPgm(System.getProperty("user.dir") + "\\QT\\rho.qt", System.getProperty("user.dir") + "\\PGM\\rho.pgm");
                             System.out.println("Compression stats : \n Lambda : \n - original number of knots : " + nbKnotBefore + " \n - current number of knots : " + nbKnotAfterLamb

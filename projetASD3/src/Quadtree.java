@@ -352,7 +352,7 @@ public class Quadtree extends QT {
         // finds the epsilons
         QtList smallEpsi = this.smallestEpsi();
         // saves the amount of knots at the start
-        int startAmountKnots = this.getKnot();
+        int startAmountKnots = this.getNodes();
         int currAmountKnots = startAmountKnots;
         // while the compression is still not enough do it on the smallest epsilon
         while (p<((float)currAmountKnots/(float)startAmountKnots)*100 && currAmountKnots>1){

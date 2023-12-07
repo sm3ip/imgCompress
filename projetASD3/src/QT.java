@@ -64,6 +64,10 @@ public class QT {
      */
     public QT getV4() { return V4; }
 
+    /** retrieves this knot's parent
+     *
+     * @return the parent
+     */
     public QT getParent() {
         return parent;
     }
@@ -76,18 +80,21 @@ public class QT {
 
     // setters
 
-
+    /** sets the value of the parent node
+     *
+     * @param parent a quadtree
+     */
     public void setParent(QT parent) {
         this.parent = parent;
     }
 
-    /** Sets this knot's luminosity value
+    /** Sets this node's luminosity value
      *
      * @param currLum an int representing the luminosity
      */
     public void setCurrLum(int currLum) { this.currLum = currLum; }
 
-    /** Sets this knot's top-left child
+    /** Sets this node's top-left child
      *
      * @param v1 a quadtree
      */
@@ -98,7 +105,7 @@ public class QT {
         }
     }
 
-    /** Sets this knot's top-right child
+    /** Sets this node's top-right child
      *
      * @param v2 a quadtree
      */
@@ -109,7 +116,7 @@ public class QT {
         }
     }
 
-    /** Sets this knot's bottom-right child
+    /** Sets this node's bottom-right child
      *
      * @param v3 a quadtree
      */
@@ -120,7 +127,7 @@ public class QT {
         }
     }
 
-    /** Sets this knot's bottom-left child
+    /** Sets this node's bottom-left child
      *
      * @param v4 a quadtree
      */
@@ -131,7 +138,7 @@ public class QT {
         }
     }
 
-    /** Sets this knot's height
+    /** Sets this node's height
      *
      * @param selfHeight an int representing a height
      */
@@ -147,19 +154,19 @@ public class QT {
         return (this.getCurrLum()==-1) ? ("("+this.getV1().toString()+";"+this.getV2().toString()+";"+this.getV3().toString()+";"+this.getV4().toString()+")"):(Integer.toString(this.getCurrLum()));
     }
 
-    /** Determines (for the whole tree) the Knot's epsilon and lambda values
+    /** Determines (for the whole tree) the node's epsilon and lambda values
      *
-     * @return this knot's lambda value because the parent knot needs it for it's lambda and epsilon computations
+     * @return this node's lambda value because the parent node needs it for its lambda and epsilon computations
      */
     public int determineEpsiLamb(){
-        if (this.currLum==-1){ // if this knot has children
+        if (this.currLum==-1){ // if this node has children
             // goes to the deepest parts so the children get their own lambda
             // And retrieves the children's lambda
             int l1 = this.getV1().determineEpsiLamb();
             int l2 = this.getV2().determineEpsiLamb();
             int l3 = this.getV3().determineEpsiLamb();
             int l4 = this.getV4().determineEpsiLamb();
-            // compute this knot's lambda and epsilon
+            // compute this node's lambda and epsilon
             //lambda computation
             double lambdaComputation = Math.exp(0.25 * ((Math.log(0.1 + l1)) + (Math.log(0.1 + l2)) + (Math.log(0.1 + l3)) + (Math.log(0.1 + l4))));
             this.selfLamb = (int) Math.round(lambdaComputation);
@@ -168,7 +175,7 @@ public class QT {
             float mLamb12 = Math.max(Math.abs(lambda-l1),Math.abs(lambda-l2));
             float mLamb34 = Math.max(Math.abs(lambda-l3), Math.abs(lambda-l4));
             this.selfEpsi = Math.max(mLamb12,mLamb34);
-        }else { // if the Knot doesn't have children we set its lambda value to its own luminosity
+        }else { // if the node doesn't have children we set its lambda value to its own luminosity
             this.selfLamb = this.currLum;
         }
         return this.selfLamb;
@@ -194,14 +201,14 @@ public class QT {
     /** Reads a 2D array and stores it in the QuadTree
      *
      * @param tab the 2D-array containing the picture's data
-     * @param height the knot's height
+     * @param height the node's height
      */
     public void arrToQT(int[][] tab, int height,QT parent){
         this.selfHeight = height;
         this.parent = parent;
         // checks if all values in the array are equal
         boolean isEqual = isTabAllEqual(tab);
-        if (isEqual){ // this Knot won't have children
+        if (isEqual){ // this node won't have children
             this.abandonChildren(tab[0][0]);
         }else {
             // if values aint equal we call the function recursively on the children
@@ -218,7 +225,7 @@ public class QT {
         }
     }
 
-    /** Sets this knot's luminosity value and sets childs as null
+    /** Sets this node's luminosity value and sets childs as null
      *
      * @param lum the luminosity
      */
@@ -242,9 +249,9 @@ public class QT {
         }
     }
 
-    /** Checks if this quadtree as the correct format to be considered as a quadtree
+    /** Checks if this quadtree has the correct format to be considered as a quadtree
      *
-     * @return this knot's luminosity (so the previous call can retrieve this data)
+     * @return this node's luminosity (so the previous call can retrieve this data)
      */
     public int trueQT(){
         if (this.getCurrLum()==-1){
@@ -261,12 +268,12 @@ public class QT {
         return this.getCurrLum();
     }
 
-    /** Retrieves the amount of knot this quadtree has
+    /** Retrieves the amount of nodes this quadtree has
      *
-     * @return 1 if this knot doesn't have children, 1 plus this function's value applied to each children if otherwise
+     * @return 1 if this node doesn't have children, 1 plus this function's value applied to each children if otherwise
      */
-    public int getKnot(){
-        return (this.getCurrLum()==-1) ? (1+ this.getV1().getKnot() + this.getV2().getKnot() + this.getV3().getKnot() + this.getV4().getKnot()):(1);
+    public int getNodes(){
+        return (this.getCurrLum()==-1) ? (1+ this.getV1().getNodes() + this.getV2().getNodes() + this.getV3().getNodes() + this.getV4().getNodes()):(1);
     }
 
     /** Does the lambda compression on this quadtree's final children
@@ -274,12 +281,8 @@ public class QT {
      */
     public void tree_compression_lambda(){
         if (this.getCurrLum()==-1){
-            int l1 = this.getV1().getCurrLum();
-            int l2 = this.getV2().getCurrLum();
-            int l3 = this.getV3().getCurrLum();
-            int l4 = this.getV4().getCurrLum();
-            if (l1!=-1 && l2!=-1 && l3!=-1 && l4!=-1){
-                // if this knot has children and none of them have children we do the lambda compression
+            if (this.isATwig()){
+                // if this node has children and none of them have children we do the lambda compression
                 this.abandonChildren(this.getSelfLamb());
             }else {
                 // else we do the compression on the children
@@ -291,30 +294,34 @@ public class QT {
         }
     }
 
+    /**
+     * checks if its children have children themselves
+     * @return true if none of its children have children
+     */
     public boolean isATwig(){
         return (this.getV1().getCurrLum()!=-1 &&this.getV2().getCurrLum()!=-1&& this.getV3().getCurrLum()!=-1&& this.getV4().getCurrLum()!=-1);
     }
 
-    /** Retrieves the knot containing the smallest epsilon
+    /** Retrieves the list of node sorted by the smallest epsilon
      *
-     * @return a tuple composed of the path to the quadtree and its epsilon
+     * @return a list of quadtree sorted by epsilon
      */
     public QtList smallestEpsi() {
         if (this.getCurrLum() == -1) {
-            if (this.getV1().getCurrLum()!=-1 && this.getV2().getCurrLum()!=-1 && this.getV3().getCurrLum()!=-1 && this.getV4().getCurrLum()!=-1){
+            if (this.isATwig()){
                 return new QtList(this);
             }else {
-                // if they have children we call the function recursively upon them while also updating the path
+                // if they have children we call the function recursively upon them
                 QtList v1Epsis = this.getV1().smallestEpsi();
                 QtList v2Epsis = this.getV2().smallestEpsi();
                 QtList v3Epsis = this.getV3().smallestEpsi();
                 QtList v4Epsis = this.getV4().smallestEpsi();
-                // now gotta find the smallest epsilon amongst them
-                //comparing 1 and 2
+                // now gotta sort them
+                //sorting 1 and 2
                 QtList v12Epsis = QtList.sFAdd(v1Epsis, v2Epsis);
-                //comparing 3 and 4
+                //sorting 3 and 4
                 QtList v34Epsis = QtList.sFAdd(v3Epsis, v4Epsis);
-                //comparing 12 and 34
+                //sorting 12 and 34
                 return QtList.sFAdd(v12Epsis, v34Epsis);
             }
         }else {
