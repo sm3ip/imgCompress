@@ -351,18 +351,18 @@ public class Quadtree extends QT {
         if (p<0||p>100){return false;}
         // finds the epsilons
         QtList smallEpsi = this.smallestEpsi();
-        // saves the amount of knots at the start
-        int startAmountKnots = this.getNodes();
-        int currAmountKnots = startAmountKnots;
+        // saves the amount of nodes at the start
+        int startAmountNodes = this.getNodes();
+        int currAmountNodes = startAmountNodes;
         // while the compression is still not enough do it on the smallest epsilon
-        while (p<((float)currAmountKnots/(float)startAmountKnots)*100 && currAmountKnots>1){
+        while (p<((float)currAmountNodes/(float)startAmountNodes)*100 && currAmountNodes>1){
             // we wanna show progress at each occurence
-            float prog = 100 -((((float)currAmountKnots/(float)startAmountKnots)*100-p)/((float)100-p))*100;
+            float prog = 100 -((((float)currAmountNodes/(float)startAmountNodes)*100-p)/((float)100-p))*100;
             String message = "Progress at "+ prog+"%";
             System.out.println(message);
             // find the tree's smallest epsilon
             QtList smallyEpsi = QtList.pop(smallEpsi);
-            // finds the corresponding knot
+            // finds the corresponding node
             QT tempCute = smallyEpsi.getQtObj();
             //tempCute.tree_compression_lambda();
             tempCute.abandonChildren(tempCute.getSelfLamb());
@@ -370,7 +370,7 @@ public class Quadtree extends QT {
             if (tempCute.getParent().isATwig()){
                 smallEpsi = QtList.sFAdd(smallEpsi, new QtList(tempCute.getParent()));
             }
-            currAmountKnots -= 4;
+            currAmountNodes -= 4;
         }
         this.trueQT(); // is it overkill ?
         return true;
@@ -378,7 +378,7 @@ public class Quadtree extends QT {
 
     /** Finds a quadTree root through a path
      *
-     * @param smallyEpsi contains the pathway to the knot
+     * @param smallyEpsi contains the pathway to the node
      * @return returns the searched quadTree
      */
     //private QT findRhoQT(StrFloatList smallyEpsi) {

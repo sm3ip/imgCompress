@@ -13,7 +13,7 @@ public class Main {
             String lastQtLocation = ""; // the last saved .qt
             String comprDone =""; // all the compr done
             Quadtree loadedQT = null; // the soft's qt
-            int startAmountKnot = 0;
+            int startAmountNode = 0;
             while(wantsToGoOn){
                 System.out.println("Currently loaded pgm : " + currentFile);
                 System.out.println("What do you wanna do (press the number before the action to choose)?" +
@@ -54,7 +54,7 @@ public class Main {
                                 currentFile = pgsDir.getAbsolutePath()+"\\"+selectedPgm;
                                 try{
                                     loadedQT = new Quadtree(currentFile);
-                                    startAmountKnot = loadedQT.getNodes();
+                                    startAmountNode = loadedQT.getNodes();
                                     comprDone = "";
                                     System.out.println("PGM file successfully loaded");
                                 }
@@ -131,9 +131,9 @@ public class Main {
                         break;
                     case 5:
                         String temp = (currentFile.isEmpty())?("There's no pgm file loaded,therefore we can't provide statistics"):("Compression statistics on : \n"
-                                +currentFile + "\n Compressions done : \n" + comprDone + "- amount of knots at first : " + startAmountKnot +
-                                "\n - amount of knot after compressions : " + loadedQT.getNodes()
-                                + "\n - Compression : "+ ((float)loadedQT.getNodes()/(float)startAmountKnot)*100 +"%");
+                                +currentFile + "\n Compressions done : \n" + comprDone + "- amount of nodes at first : " + startAmountNode +
+                                "\n - amount of nodes after compressions : " + loadedQT.getNodes()
+                                + "\n - Compression : "+ ((float)loadedQT.getNodes()/(float)startAmountNode)*100 +"%");
                         System.out.println(temp);
                         break;
                     default:
@@ -157,10 +157,10 @@ public class Main {
                 Quadtree temp;
                 try {
                     temp = new Quadtree(args[0]);
-                    int nbKnotBefore = temp.getNodes();
+                    int nbNodeBefore = temp.getNodes();
                     // lambda compression
                     temp.compressLambda();
-                    int nbKnotAfterLamb = temp.getNodes();
+                    int nbNodeAfterLamb = temp.getNodes();
                     new File(System.getProperty("user.dir") + "\\QT").mkdirs(); //(would be /QT on linux)
                     if (temp.saveCurrentQT(System.getProperty("user.dir") + "\\QT\\lambda.qt")) {
                         new File(System.getProperty("user.dir") + "\\PGM").mkdirs(); //(would be /PGM on linux)
@@ -168,12 +168,12 @@ public class Main {
                         // rho compression
                         temp = new Quadtree(args[0]);
                         temp.compressRho(p);
-                        int nbKnotAfterRho = temp.getNodes();
+                        int nbNodeAfterRho = temp.getNodes();
                         if (temp.saveCurrentQT(System.getProperty("user.dir") + "\\QT\\rho.qt")) {
                             Quadtree.qtFileToPgm(System.getProperty("user.dir") + "\\QT\\rho.qt", System.getProperty("user.dir") + "\\PGM\\rho.pgm");
-                            System.out.println("Compression stats : \n Lambda : \n - original number of knots : " + nbKnotBefore + " \n - current number of knots : " + nbKnotAfterLamb
-                                    + "\n - Compression : " + ((float) nbKnotAfterLamb / (float) nbKnotBefore) * 100 + "% \n Rho : \n - original number of knots : "
-                                    + nbKnotBefore + "\n - current number of knots : " + nbKnotAfterRho + "\n - compression : " + ((float) nbKnotAfterRho / (float) nbKnotBefore) * 100
+                            System.out.println("Compression stats : \n Lambda : \n - original number of nodes : " + nbNodeBefore + " \n - current number of nodes : " + nbNodeAfterLamb
+                                    + "\n - Compression : " + ((float) nbNodeAfterLamb / (float) nbNodeBefore) * 100 + "% \n Rho : \n - original number of nodes : "
+                                    + nbNodeBefore + "\n - current number of nodes : " + nbNodeAfterRho + "\n - compression : " + ((float) nbNodeAfterRho / (float) nbNodeBefore) * 100
                                     + "%");
                         } else {
                             System.out.println("Couldn't save rho's .qt, closing application...");
@@ -205,7 +205,7 @@ public class Main {
 
         //QuadTree temp = new QuadTree("C:\\Users\\lucas\\Documents\\CMI_etudes\\L3\\ASD3\\project\\imgCompress\\projetASD3\\src\\boat.pgm");
         //System.out.println(temp.toString());
-        //System.out.println("KNOT before" +temp.getKnot());
+        //System.out.println("Nodes before" +temp.getKnot());
         //temp.rhoCompr(80);
         //System.out.println("KNOT after"+temp.getKnot());
 

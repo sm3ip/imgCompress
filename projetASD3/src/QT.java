@@ -18,13 +18,13 @@ public class QT {
 
     // getters
 
-    /** Gets this knot's luminosity
+    /** Gets this node's luminosity
      *
      * @return the luminosity
      */
     public int getCurrLum() { return currLum; }
 
-    /** Gets this knot's lambda value
+    /** Gets this node's lambda value
      *
      * @return lambda
      */
@@ -32,7 +32,7 @@ public class QT {
         return selfLamb;
     }
 
-    /** Gets this knot's epsilon value
+    /** Gets this node's epsilon value
      *
      * @return epsilon
      */
@@ -64,7 +64,7 @@ public class QT {
      */
     public QT getV4() { return V4; }
 
-    /** retrieves this knot's parent
+    /** retrieves this node's parent
      *
      * @return the parent
      */
@@ -72,9 +72,9 @@ public class QT {
         return parent;
     }
 
-    /** Get this knot's height
+    /** Get this node's height
      *
-     * @return the depth at wich this knot is
+     * @return the depth at wich this node is
      */
     public int getSelfHeight() { return selfHeight; }
 
@@ -255,7 +255,7 @@ public class QT {
      */
     public int trueQT(){
         if (this.getCurrLum()==-1){
-            // if this knot has children we call the function upon them and retrieve their luminosity
+            // if this node has children we call the function upon them and retrieve their luminosity
             int l1 = this.getV1().trueQT();
             int l2 = this.getV2().trueQT();
             int l3 = this.getV3().trueQT();
