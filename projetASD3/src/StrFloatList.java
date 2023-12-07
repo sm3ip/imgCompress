@@ -1,7 +1,7 @@
 /** Represent a data structure holding a String and a float
  * */
 public class StrFloatList {
-    private String pathway;
+    private QT pathway;
     private float epsilonVal;
 
     private StrFloatList next;
@@ -10,7 +10,7 @@ public class StrFloatList {
      * @param _pathway the path to get to the corresponding knot in the QT
      * @param _epsilonValue the epsilon value of this specific knot
      */
-    public StrFloatList(String _pathway, float _epsilonValue){
+    public StrFloatList(QT _pathway, float _epsilonValue){
         this.pathway=_pathway;
         this.epsilonVal=_epsilonValue;
         next = null;
@@ -30,11 +30,11 @@ public class StrFloatList {
      *
      * @return a string containing a path leading to the knot
      */
-    public String getPathway() {
+    public QT getPathway() {
         return pathway;
     }
 
-    public void setPathway(String pathway) {
+    public void setPathway(QT pathway) {
         this.pathway = pathway;
     }
 

@@ -24,7 +24,7 @@ public class QuadTree extends QT {
         setFileRoute(file);
         try{
             pgmToArr();
-            arrToQT(this.tab,0);
+            arrToQT(this.tab,0,null);
             this.trueQT();
             this.determineEpsiLamb();
         } catch (FileNotFoundException e){
@@ -341,7 +341,7 @@ public class QuadTree extends QT {
      */
     public void rhoCompr(int p){
         // finds the epsilons
-        StrFloatList smallEpsi = this.smallestEpsi("");
+        StrFloatList smallEpsi = this.smallestEpsi();
         // saves the amount of knots at the start
         int startAmountKnots = this.getKnot();
         int currAmountKnots = startAmountKnots;
@@ -357,21 +357,18 @@ public class QuadTree extends QT {
 
 
             // finds the corresponding knot
-            QT tempCute = findRhoQT(smallyEpsi);
-            tempCute.tree_compression_lambda();
-            this.trueQT();
-            currAmountKnots = this.getKnot();
-            // gotta update the list to maybe add the parent if he doesn't have any children
-            if (smallyEpsi.getPathway().length()>1){ // to get the parent's pathway
-                System.out.println(smallyEpsi.getPathway());
-                smallyEpsi.setPathway(smallyEpsi.getPathway().substring(0,smallyEpsi.getPathway().length()-1));
-                System.out.println(smallyEpsi.getPathway());
-                tempCute = findRhoQT(smallyEpsi);
-                if (tempCute!=null&&tempCute.getCurrLum()==-1&&tempCute.getV1().getCurrLum()!=-1&&tempCute.getV2().getCurrLum()!=-1&&tempCute.getV3().getCurrLum()!=-1&&tempCute.getV4().getCurrLum()!=-1){
-                    smallEpsi = StrFloatList.sFAdd(smallEpsi, new StrFloatList(smallyEpsi.getPathway(), tempCute.getSelfEpsi()));
-                }
+            QT tempCute = smallyEpsi.getPathway();
+            //tempCute.tree_compression_lambda();
+            tempCute.abandonChildren(tempCute.getSelfLamb());
+            // now check if tempCute's parent would be a "brindille"
+            if (tempCute.getParent().isATwig()){
+                smallEpsi = StrFloatList.sFAdd(smallEpsi, new StrFloatList(tempCute.getParent(),tempCute.getParent().getSelfEpsi()));
             }
+
+            currAmountKnots -= 4;
         }
+        this.trueQT(); // is it overkill ?
+
     }
 
     /** Finds a quadTree root through a path
@@ -379,20 +376,20 @@ public class QuadTree extends QT {
      * @param smallyEpsi contains the pathway to the knot
      * @return returns the searched quadTree
      */
-    private QT findRhoQT(StrFloatList smallyEpsi) {
-        String smollerPath = smallyEpsi.getPathway();
-        QT tempCute = this;
-        while (!smollerPath.isEmpty()){
-            tempCute = switch (smollerPath.charAt(0)) {
-                case '1' -> tempCute.getV1();
-                case '2' -> tempCute.getV2();
-                case '3' -> tempCute.getV3();
-                case '4' -> tempCute.getV4();
-                default -> tempCute;
-            };
-            smollerPath = smollerPath.substring(1);
-        }
-        return tempCute;
-    }
+    //private QT findRhoQT(StrFloatList smallyEpsi) {
+    //    String smollerPath = smallyEpsi.getPathway();
+    //    QT tempCute = this;
+    //    while (!smollerPath.isEmpty()){
+    //        tempCute = switch (smollerPath.charAt(0)) {
+    //            case '1' -> tempCute.getV1();
+    //            case '2' -> tempCute.getV2();
+    //            case '3' -> tempCute.getV3();
+    //            case '4' -> tempCute.getV4();
+    //            default -> tempCute;
+    //        };
+    //        smollerPath = smollerPath.substring(1);
+    //    }
+    //    return tempCute;
+    //}
 
 }
