@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Scanner;
 import java.io.FileWriter;
 
@@ -361,7 +362,7 @@ public class Quadtree extends QT {
     public boolean compressRho(int p){
         if (p<0||p>100){return false;}
         // finds the epsilons
-        QtList smallEpsi = this.smallestEpsi();
+        AVLTree smallEpsi = this.smallestEpsi();
         // saves the amount of nodes at the start
         int startAmountNodes = this.getNodes();
         int currAmountNodes = startAmountNodes;
@@ -372,14 +373,15 @@ public class Quadtree extends QT {
             String message = "Progress at "+ prog+"%";
             System.out.println(message);
             // find the tree's smallest epsilon
-            QtList smallyEpsi = QtList.pop(smallEpsi);
+            QtList smallyEpsi = Objects.requireNonNull(AVLTree.min(smallEpsi)).list;
+            smallEpsi = AVLTree.delete(smallyEpsi.getQtObj().getSelfEpsi(),smallEpsi).tree;
             // finds the corresponding node
             QT tempCute = smallyEpsi.getQtObj();
             //tempCute.tree_compression_lambda();
             tempCute.abandonChildren(tempCute.getSelfLamb());
             // now check if tempCute's parent would be a "brindille"
             if (tempCute.getParent().isATwig()){
-                smallEpsi = QtList.sFAdd(smallEpsi, new QtList(tempCute.getParent()));
+                smallEpsi = AVLTree.add(tempCute.getParent(),smallEpsi).tree;
             }
             currAmountNodes -= 4;
         }

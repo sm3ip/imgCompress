@@ -306,23 +306,16 @@ public class QT {
      *
      * @return a list of quadtree sorted by epsilon
      */
-    public QtList smallestEpsi() {
+    public AVLTree smallestEpsi() {
         if (this.getCurrLum() == -1) {
             if (this.isATwig()){
-                return new QtList(this);
+                return new AVLTree(new QtList(this));
             }else {
                 // if they have children we call the function recursively upon them
-                QtList v1Epsis = this.getV1().smallestEpsi();
-                QtList v2Epsis = this.getV2().smallestEpsi();
-                QtList v3Epsis = this.getV3().smallestEpsi();
-                QtList v4Epsis = this.getV4().smallestEpsi();
-                // now gotta sort them
-                //sorting 1 and 2
-                QtList v12Epsis = QtList.sFAdd(v1Epsis, v2Epsis);
-                //sorting 3 and 4
-                QtList v34Epsis = QtList.sFAdd(v3Epsis, v4Epsis);
-                //sorting 12 and 34
-                return QtList.sFAdd(v12Epsis, v34Epsis);
+                AVLTree v1Epsis = this.getV1().smallestEpsi();
+                AVLTree v2Epsis = AVLTree.fuseTrees(this.getV2().smallestEpsi(),v1Epsis);
+                AVLTree v3Epsis = AVLTree.fuseTrees(this.getV3().smallestEpsi(),v2Epsis);
+                return AVLTree.fuseTrees(this.getV4().smallestEpsi(),v3Epsis);
             }
         }else {
             return null;

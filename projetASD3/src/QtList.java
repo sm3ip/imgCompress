@@ -79,6 +79,24 @@ public class QtList {
         }
     }
 
+    public static QtList simpleAdd(QtList list, QtList cute){
+        if (list == null && cute == null){
+            return null;
+        }else if (list == null){
+            return cute;
+        } else if (cute == null) {
+            return list;
+        }
+        QtList temp = list.next;
+        list.next = cute;
+        QtList t2 = cute;
+        while (t2.next!=null){
+            t2=t2.next;
+        }
+        t2.next = temp;
+        return list;
+    }
+
     /** Pops the first element of a given list
      *
      * @param me the list from which we wanna delete the first element
@@ -86,8 +104,12 @@ public class QtList {
      */
     public static QtList pop(QtList me){
         QtList temp = new QtList(me.getQtObj());
-        me.qtObj =me.next.getQtObj();
-        me.next=me.next.next;
+        if (me.next==null){
+            me = null;
+        }else {
+            me.qtObj = me.next.getQtObj();
+            me.next = me.next.next;
+        }
         return temp;
     }
 }
