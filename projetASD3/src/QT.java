@@ -16,6 +16,10 @@ public class QT {
         this.selfEpsi=-1;
     }
 
+    /** Basic QT constructor taking an int as a parameter
+     *
+     * @param x the epsilon that this QT has as a value
+     */
     public QT(int x){
         this.selfEpsi = x;
     }
@@ -306,9 +310,8 @@ public class QT {
         return (this.getV1().getCurrLum()!=-1 &&this.getV2().getCurrLum()!=-1&& this.getV3().getCurrLum()!=-1&& this.getV4().getCurrLum()!=-1);
     }
 
-    /** Retrieves the list of node sorted by the smallest epsilon
+    /** Retrieves the skip list of nodes sorted by the smallest epsilon
      *
-     * @return a list of quadtree sorted by epsilon
      */
     public void smallestEpsi(SkipList skL) {
         if (this.getCurrLum() == -1) {
