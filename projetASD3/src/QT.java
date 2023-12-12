@@ -16,6 +16,10 @@ public class QT {
         this.selfEpsi=-1;
     }
 
+    public QT(int x){
+        this.selfEpsi = x;
+    }
+
     // getters
 
     /** Gets this node's luminosity
@@ -306,26 +310,17 @@ public class QT {
      *
      * @return a list of quadtree sorted by epsilon
      */
-    public QtList smallestEpsi() {
+    public void smallestEpsi(SkipList skL) {
         if (this.getCurrLum() == -1) {
             if (this.isATwig()){
-                return new QtList(this);
+                skL.addElem(this);
             }else {
                 // if they have children we call the function recursively upon them
-                QtList v1Epsis = this.getV1().smallestEpsi();
-                QtList v2Epsis = this.getV2().smallestEpsi();
-                QtList v3Epsis = this.getV3().smallestEpsi();
-                QtList v4Epsis = this.getV4().smallestEpsi();
-                // now gotta sort them
-                //sorting 1 and 2
-                QtList v12Epsis = QtList.sFAdd(v1Epsis, v2Epsis);
-                //sorting 3 and 4
-                QtList v34Epsis = QtList.sFAdd(v3Epsis, v4Epsis);
-                //sorting 12 and 34
-                return QtList.sFAdd(v12Epsis, v34Epsis);
+                this.getV1().smallestEpsi(skL);
+                this.getV2().smallestEpsi(skL);
+                this.getV3().smallestEpsi(skL);
+                this.getV4().smallestEpsi(skL);
             }
-        }else {
-            return null;
         }
     }
 }
