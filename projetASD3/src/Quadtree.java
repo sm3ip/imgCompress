@@ -373,9 +373,7 @@ public class Quadtree extends QT {
             String message = "Progress at "+ prog+"%";
             System.out.println(message);
             // find the tree's smallest epsilon
-            // finds the corresponding node
             QT tempCute = smallEpsi.deleteMin();
-            //tempCute.tree_compression_lambda();
             if (tempCute!=null) {
                 tempCute.abandonChildren(tempCute.getSelfLamb());
                 if (tempCute.getParent().isATwig()){
@@ -385,7 +383,7 @@ public class Quadtree extends QT {
             }
             currAmountNodes -= 4;
         }
-        this.trueQT(); // is it overkill ?
+        this.trueQT();
         return true;
     }
 }

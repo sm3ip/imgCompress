@@ -6,60 +6,6 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException, IOException {
-        /*
-        // let's test skip list
-        SkipList temp = new SkipList();
-        temp.addElem(new QT(200));
-        System.out.println("_______________________");
-        System.out.println(temp);
-        temp.addElem(new QT(175));
-        System.out.println("_______________________");
-        System.out.println(temp);
-        temp.addElem(new QT(50));
-        System.out.println("_______________________");
-        System.out.println(temp);
-        temp.addElem(new QT(55));
-        System.out.println("_______________________");
-        System.out.println(temp);
-        temp.addElem(new QT(60));
-        System.out.println("_______________________");
-        System.out.println(temp);
-        temp.addElem(new QT(110));
-        System.out.println("_______________________");
-        System.out.println(temp);
-        temp.deleteMin();
-        System.out.println("_______________________");
-        System.out.println(temp);
-        temp.deleteMin();
-        System.out.println("_______________________");
-        System.out.println(temp);
-        temp.deleteMin();
-        System.out.println("_______________________");
-        System.out.println(temp);
-        temp.deleteMin();
-        System.out.println("_______________________");
-        System.out.println(temp);
-        temp.deleteMin();
-        System.out.println("_______________________");
-        System.out.println(temp);
-        temp.deleteMin();
-        System.out.println("_______________________");
-        System.out.println(temp);
-        temp.deleteMin();
-        System.out.println("_______________________");
-        System.out.println(temp);
-        temp.addElem(new QT(200));
-        System.out.println("_______________________");
-        System.out.println(temp);
-        temp.addElem(new QT(200));
-        System.out.println("_______________________");
-        System.out.println(temp);
-
-*/
-
-
-
-
         Scanner reader = new Scanner(System.in);
         if (args.length == 0){
             // menu part
@@ -233,7 +179,6 @@ public class Main {
                     } else {
                         System.out.println("Couldn't save lambda's .qt, closing application...");
                     }
-
                 } catch (FileNotFoundException e) {
                     System.out.println(e);
                     System.out.println("Closing application ...");
@@ -258,9 +203,5 @@ public class Main {
             }
         }
         return lastQtLocation;
-
-
     }
-
-
 }
