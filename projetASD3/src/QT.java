@@ -16,6 +16,10 @@ public class QT {
         this.selfEpsi=-1;
     }
 
+    public QT(int x){
+        this.selfEpsi = x;
+    }
+
     // getters
 
     /** Gets this node's luminosity
