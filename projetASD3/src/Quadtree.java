@@ -361,7 +361,8 @@ public class Quadtree extends QT {
     public boolean compressRho(int p){
         if (p<0||p>100){return false;}
         // finds the epsilons
-        QtList smallEpsi = this.smallestEpsi();
+        SkipList smallEpsi = new SkipList();
+        this.smallestEpsi(smallEpsi);
         // saves the amount of nodes at the start
         int startAmountNodes = this.getNodes();
         int currAmountNodes = startAmountNodes;
@@ -372,14 +373,15 @@ public class Quadtree extends QT {
             String message = "Progress at "+ prog+"%";
             System.out.println(message);
             // find the tree's smallest epsilon
-            QtList smallyEpsi = QtList.pop(smallEpsi);
             // finds the corresponding node
-            QT tempCute = smallyEpsi.getQtObj();
+            QT tempCute = smallEpsi.deleteMin();
             //tempCute.tree_compression_lambda();
-            tempCute.abandonChildren(tempCute.getSelfLamb());
-            // now check if tempCute's parent would be a "brindille"
-            if (tempCute.getParent().isATwig()){
-                smallEpsi = QtList.sFAdd(smallEpsi, new QtList(tempCute.getParent()));
+            if (tempCute!=null) {
+                tempCute.abandonChildren(tempCute.getSelfLamb());
+                if (tempCute.getParent().isATwig()){
+                    // now check if tempCute's parent would be a "brindille"
+                    smallEpsi.addElem(tempCute.getParent());
+                }
             }
             currAmountNodes -= 4;
         }

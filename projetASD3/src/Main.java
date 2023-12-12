@@ -6,6 +6,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException, IOException {
+        /*
         // let's test skip list
         SkipList temp = new SkipList();
         temp.addElem(new QT(200));
@@ -54,11 +55,11 @@ public class Main {
         System.out.println("_______________________");
         System.out.println(temp);
 
+*/
 
 
 
 
-        /*
         Scanner reader = new Scanner(System.in);
         if (args.length == 0){
             // menu part
@@ -258,7 +259,7 @@ public class Main {
         }
         return lastQtLocation;
 
-         */
+
     }
 
 
