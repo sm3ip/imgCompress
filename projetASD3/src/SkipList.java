@@ -2,11 +2,15 @@ import java.lang.management.ThreadInfo;
 import java.util.Random;
 
 public class SkipList {
+// a skip list implementation
+    SkipNode minBot, maxBot, minTop, maxTop; // the borders of the skiplist
+    int height; // the height of the skiplist
 
-    SkipNode minBot, maxBot, minTop, maxTop;
-    int height;
-
+    /** a simple constructor taking no argument
+     *
+     */
     public SkipList(){
+        // creates the 4 SkipNode objects
         this.minBot = new SkipNode(new QT(SkipNode.infNeg));
         this.maxBot = new SkipNode(new QT(SkipNode.infPos));
         this.minTop = new SkipNode(new QT(SkipNode.infNeg));
@@ -26,24 +30,30 @@ public class SkipList {
         this.height = 1;
     }
 
+    /** deletes the minimal element from the skip list
+     *
+     * @return the value that was stored in it
+     */
     public QT deleteMin(){
-        System.out.println("min bot val "+this.minBot.x+ "min bot next is null !" + String.valueOf(this.minBot.next!=null));
+        // checks the conditions to being able to delete an element
         if (this.height>0 && this.minBot.next.x.getSelfEpsi()!=SkipNode.infPos){
             // get value by suppressing it
             QT ans = this.minBot.next.deleteSelf();
-            //TODO: check if there isnt too much layers
+            //checks if there isnt too much layers
             if (this.minBot!=this.minTop){
                 this.trueSkList();
             }
             return ans;
         }else {
-            //si empty
+            //if empty
             return null;
         }
     }
 
 
-
+    /** Makes sure that the skip list doesn't have too many layers
+     *
+     */
     public void trueSkList(){
         // go on top, check if bottom one is empty if true delete it
         while (this.maxTop.bottom!=null && this.minTop.bottom!=null &&this.minTop.bottom.next.x.getSelfEpsi()==SkipNode.infPos){
@@ -58,17 +68,18 @@ public class SkipList {
             //unlink bottom one
             // if not linking to null, links bottom list to top
             if (this.minTop.bottom!=null && this.maxTop.bottom!=null){
+                // delete every pointers from the deleted nodes
                 this.minTop.bottom.top.top=null;
                 this.maxTop.bottom.top.top=null;
                 this.minTop.bottom.top.bottom=null;
                 this.maxTop.bottom.top.bottom=null;
-
+                // relinks bottom list with top list
                 this.minTop.bottom.top = this.minTop;
                 this.maxTop.bottom.top = this.maxTop;
             }
-
         }
         if (this.height == 0){
+            // if height to zero, resets the skipList to a new one
             this.minTop = new SkipNode(new QT(SkipNode.infNeg));
             this.maxTop = new SkipNode(new QT(SkipNode.infPos));
             this.minTop.next = this.maxTop;
@@ -78,7 +89,12 @@ public class SkipList {
         }
     }
 
+    /** adds an element to the skipList
+     *
+     * @param elem the QT you wanna add
+     */
     public void addElem(QT elem){
+        // gets the height at which it should be inserted using the random method
         int i = -1;
         Random rand = new Random();
         int randNb = 1;
@@ -107,7 +123,6 @@ public class SkipList {
             }
         }
         //find the smallest element smaller than elem from top to bottom line
-        //SkipNode[] tab = new SkipNode[];
         SkipArray tab = new SkipArray();
         SkipNode seekSmall = this.minTop;
         while (seekSmall.bottom!=null){
@@ -136,6 +151,10 @@ public class SkipList {
     }
 
 
+    /** simple override of the toString method to show the structure of the skip-list
+     *
+     * @return a string representing the structure of the skip-list
+     */
     @Override
     public String toString(){
         String ans = "";
@@ -153,36 +172,68 @@ public class SkipList {
     }
     //getters
 
+    /** retrieves the node +infinity on the bottommost line
+     *
+     * @return maxBot
+     */
     public SkipNode getMaxBot() {
         return maxBot;
     }
 
+    /** retrieves the node +infinity on the topmost line
+     *
+     * @return maxTop
+     */
     public SkipNode getMaxTop() {
         return maxTop;
     }
 
+    /** retrieves the node -infinity on the bottommost line
+     *
+     * @return min Bot
+     */
     public SkipNode getMinBot() {
         return minBot;
     }
 
+    /** retrieves the node -infinity on the topmost line
+     *
+     * @return minTop
+     */
     public SkipNode getMinTop() {
         return minTop;
     }
 
     //setters
 
+    /** sets the node +infinity on the bottommost line
+     *
+     * @param maxBot a SkipNode
+     */
     public void setMaxBot(SkipNode maxBot) {
         this.maxBot = maxBot;
     }
 
+    /** sets the node +infinity on the topmost line
+     *
+     * @param maxTop a skipNode
+     */
     public void setMaxTop(SkipNode maxTop) {
         this.maxTop = maxTop;
     }
 
+    /** sets the node -infinity on the bottommost line
+     *
+     * @param minBot a skipNode
+     */
     public void setMinBot(SkipNode minBot) {
         this.minBot = minBot;
     }
 
+    /** sets the node -infinity on the topmost line
+     *
+     * @param minTop a skipNode
+     */
     public void setMinTop(SkipNode minTop) {
         this.minTop = minTop;
     }
