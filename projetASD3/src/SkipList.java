@@ -27,7 +27,8 @@ public class SkipList {
     }
 
     public QT deleteMin(){
-        if (this.minBot.next.x.getSelfEpsi()!=SkipNode.infPos){
+        System.out.println("min bot val "+this.minBot.x+ "min bot next is null !" + String.valueOf(this.minBot.next!=null));
+        if (this.height>0 && this.minBot.next.x.getSelfEpsi()!=SkipNode.infPos){
             // get value by suppressing it
             QT ans = this.minBot.next.deleteSelf();
             //TODO: check if there isnt too much layers
@@ -54,12 +55,26 @@ public class SkipList {
             // link with list under it
             this.minTop.bottom = this.minTop.bottom.bottom;
             this.maxTop.bottom = this.maxTop.bottom.bottom;
+            //unlink bottom one
             // if not linking to null, links bottom list to top
             if (this.minTop.bottom!=null && this.maxTop.bottom!=null){
+                this.minTop.bottom.top.top=null;
+                this.maxTop.bottom.top.top=null;
+                this.minTop.bottom.top.bottom=null;
+                this.maxTop.bottom.top.bottom=null;
+
                 this.minTop.bottom.top = this.minTop;
                 this.maxTop.bottom.top = this.maxTop;
             }
 
+        }
+        if (this.height == 0){
+            this.minTop = new SkipNode(new QT(SkipNode.infNeg));
+            this.maxTop = new SkipNode(new QT(SkipNode.infPos));
+            this.minTop.next = this.maxTop;
+            this.maxTop.previous = this.minTop;
+            this.minBot = this.maxBot;
+            this.maxBot = this.maxTop;
         }
     }
 
