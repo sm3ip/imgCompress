@@ -9,14 +9,13 @@ public class Main {
         Scanner reader = new Scanner(System.in);
         if (args.length == 0){
             // menu part
-            String menuMessage = """
-                    What do you wanna do (press the number before the action to choose)?
-                     1- Choose a pgm to load amongst a list (you'll have to provide the absolute path to the directory containing those pgms).
-                     2- Apply a lambda compression on the currently loaded pgm and create its .qt file (you'll have to provide its name).
-                     3- Apply a rho compression on the currently loaded pgm and create its.qt file (you'll have to provide its name and the parameter p).
-                     4- Generate the pgm from the previously created .qt file (can also create a pgm from a provided and well-built .qt file).
-                     5- Show the compression statistics ( if you haven't reloaded a pgm in between multiple compressions the stats will take it into account).
-                     Any other input will result in the termination of this application.""";
+            String menuMessage = "What do you wanna do (press the number before the action to choose)?\n" +
+                                 " 1- Choose a pgm to load amongst a list (you'll have to provide the absolute path to the directory containing those pgms).\n" +
+                                 " 2- Apply a lambda compression on the currently loaded pgm and create its .qt file (you'll have to provide its name).\n" +
+                                 " 3- Apply a rho compression on the currently loaded pgm and create its.qt file (you'll have to provide its name and the parameter p).\n" +
+                                 " 4- Generate the pgm from the previously created .qt file (can also create a pgm from a provided and well-built .qt file).\n" +
+                                 " 5- Show the compression statistics ( if you haven't reloaded a pgm in between multiple compressions the stats will take it into account).\n" +
+                                 " Any other input will result in the termination of this application.";
             boolean wantsToGoOn = true; // continues the loop
             String currentFile = ""; // the pgm being taken care of
             String lastQtLocation = ""; // the last saved .qt
@@ -146,6 +145,10 @@ public class Main {
 
         }else {
             //timing
+            long startLambda=0;
+            long endLambda=0;
+            long startRho=0;
+            long endRho=0;
             long startTime = System.currentTimeMillis();
             // part where the soft works by itself || the first param is the filename, the second is p
             int p = Integer.parseInt(args[1]);
@@ -157,7 +160,9 @@ public class Main {
                     temp = new Quadtree(args[0]);
                     int nbNodeBefore = temp.getNodes();
                     // lambda compression
+                    startLambda = System.currentTimeMillis();
                     temp.compressLambda();
+                    endLambda = System.currentTimeMillis();
                     int nbNodeAfterLamb = temp.getNodes();
                     new File(System.getProperty("user.dir") +System.getProperty("file.separator") +"QT").mkdirs(); //(would be /QT on linux)
                     if (temp.saveCurrentQT(System.getProperty("user.dir")+ System.getProperty("file.separator") + "QT"+System.getProperty("file.separator")+"lambda.qt")) {
@@ -165,7 +170,9 @@ public class Main {
                         Quadtree.qtFileToPgm(System.getProperty("user.dir") + System.getProperty("file.separator")+ "QT"+System.getProperty("file.separator")+"lambda.qt", System.getProperty("user.dir") +System.getProperty("file.separator")+ "PGM"+System.getProperty("file.separator")+"lambda.pgm");
                         // rho compression
                         temp = new Quadtree(args[0]);
+                        startRho=System.currentTimeMillis();
                         temp.compressRho(p);
+                        endRho=System.currentTimeMillis();
                         int nbNodeAfterRho = temp.getNodes();
                         if (temp.saveCurrentQT(System.getProperty("user.dir") + System.getProperty("file.separator")+"QT"+System.getProperty("file.separator")+"rho.qt")) {
                             Quadtree.qtFileToPgm(System.getProperty("user.dir") + System.getProperty("file.separator")+"QT"+System.getProperty("file.separator")+"rho.qt", System.getProperty("user.dir") +System.getProperty("file.separator")+ "PGM"+System.getProperty("file.separator")+"rho.pgm");
@@ -185,7 +192,8 @@ public class Main {
                 }
             }
             long endTime = System.currentTimeMillis();
-            System.out.println("Time taken : "+ (endTime-startTime)+"ms");
+            System.out.println("Time taken lambda : "+ (endLambda-startLambda)+"ms");
+            System.out.println("Time taken Rho : "+ (endRho-startRho)+"ms");
         }
     }
 
