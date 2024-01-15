@@ -122,16 +122,18 @@ public class Quadtree extends QT {
                     // of space in between the numbers (and at least 1)
                     String[] tokens = currLine.split(" +");
                     switch (count) {
-                        case 2 -> { // in the case where the retrieved data is the picture's size
+                        case 2:  // in the case where the retrieved data is the picture's size
                             this.setSize(Integer.parseInt(tokens[0]));
                             this.setTab(new int[this.getSize()][this.getSize()]);
-                            count+=1;
-                        }
-                        case 3 -> { // in the case where the retrieved data is the picture's max luminosity
+                            break;
+
+
+                        case 3:  // in the case where the retrieved data is the picture's max luminosity
                             this.setMaxLum(Integer.parseInt(tokens[0]));
-                            count+=1;
-                        }
-                        default -> { // in all the other cases the line contains the pgm's pixels
+                            break;
+
+
+                        default :  // in all the other cases the line contains the pgm's pixels
                             for (String token: tokens) {
                                     int temp = Integer.parseInt(token);
                                     this.tab[i][j] = temp;
@@ -141,8 +143,9 @@ public class Quadtree extends QT {
                                         j++;
                                     }
                             }
-                        }
+                            break;
                     }
+                    count += 1;
                 }
             }
             theReader.close();
